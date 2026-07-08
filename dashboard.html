@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Coverage - Billing Dashboard</title>
+<style>
+ body{margin:0;font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;background:#f4f5f7}
+ .top{background:#fff;border-bottom:3px solid #cc0000;padding:12px 18px}
+ .top b{font-size:18px}.top span{color:#6b7280;font-size:12px;display:block}
+ .wrap{max-width:940px;margin:0 auto;padding:16px}
+ .card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:16px;margin-bottom:12px}
+ table{border-collapse:collapse;width:100%;font-size:13px}
+ th,td{border-bottom:1px solid #eee;padding:9px 10px;text-align:right}th:first-child,td:first-child{text-align:left}
+ th{font-size:11px;text-transform:uppercase;color:#6b7280}
+ .pill{font-size:11px;font-weight:bold;padding:2px 9px;border-radius:20px}
+ .pill.over{background:#fdecec;color:#b40000}.pill.under{background:#e7f6ec;color:#0a7d34}
+ td.over{color:#b40000;font-weight:bold}td.under{color:#0a7d34;font-weight:bold}
+ .mut{color:#6b7280;font-size:12px}a{color:#cc0000}
+</style></head><body>
+<div class="top"><b>Coverage - Billing Dashboard</b><span>Actual page coverage vs contracted rate, per device</span></div>
+<div class="wrap">
+ <div class="card"><div class="mut" id="sub">Loading...</div>
+  <table id="tbl"></table></div>
+ <div class="mut">Coverage is measured from the actual pixels on each printed page (not the printer's toner estimate). <a href="/">Measurement tool &rarr;</a></div>
+</div>
+<script>
+function pctv(x){return (Math.round(x*100)/100).toFixed(2)+'%';}
+var x=new XMLHttpRequest();x.open('GET','/api/summary',true);
+x.onreadystatechange=function(){if(x.readyState===4&&x.status===200){render(JSON.parse(x.responseText));}};
+x.send();
+function render(d){
+ document.getElementById('sub').textContent='Contracted coverage: '+d.contractPct+'%  -  '+d.devices.length+' device(s) reporting';
+ var t='<tr><th>Printer serial</th><th>Model</th><th>Jobs</th><th>Pages</th><th>Actual coverage</th><th>Contract</th><th>Difference</th><th>Status</th></tr>';
+ for(var i=0;i<d.devices.length;i++){var m=d.devices[i];var over=m.avgCoverage>m.contract;var cls=over?'over':'under';
+  t+='<tr><td>'+m.serial+'</td><td>'+(m.model||'')+'</td><td>'+m.jobs+'</td><td>'+m.pages+'</td><td><b>'+pctv(m.avgCoverage)+'</b></td><td>'+pctv(m.contract)+'</td><td class="'+cls+'">'+(m.delta>=0?'+':'')+pctv(m.delta)+'</td><td><span class="pill '+cls+'">'+(over?'Over':'Under')+'</span></td></tr>';}
+ document.getElementById('tbl').innerHTML=t;
+}
+</script></body></html>

@@ -57,4 +57,29 @@ app.get("/api/analyze-sample", (req, res) => {
     record(report); res.json(report);
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
+// --- Billing summary (per-serial coverage vs contracted rate) ---
+const CONTRACT_PCT = 5;
+const SEED = [
+  {device:{serialNumber:"3776005117",model:"Xerox AltaLink C8135"},job:{pages:12},coverage:{avgTotalAreaCoveragePct:7.8}},
+  {device:{serialNumber:"3776005117",model:"Xerox AltaLink C8135"},job:{pages:3},coverage:{avgTotalAreaCoveragePct:6.2}},
+  {device:{serialNumber:"XRX-8145-0042",model:"Xerox AltaLink C8145"},job:{pages:40},coverage:{avgTotalAreaCoveragePct:3.1}},
+  {device:{serialNumber:"XRX-B8055-0009",model:"Xerox AltaLink B8055"},job:{pages:120},coverage:{avgTotalAreaCoveragePct:2.4}},
+  {device:{serialNumber:"XRX-C7025-0113",model:"Xerox VersaLink C7025"},job:{pages:8},coverage:{avgTotalAreaCoveragePct:11.5}}
+];
+function summarize(){
+  let recs; try { recs = recent(2000); } catch(e){ recs = []; }
+  const all = SEED.concat(recs); const map = {};
+  all.forEach(r=>{
+    const s=(r.device&&r.device.serialNumber)||"unknown";
+    const cov=(r.coverage&&r.coverage.avgTotalAreaCoveragePct)||0;
+    const pages=(r.job&&r.job.pages)||1;
+    const m=map[s]||(map[s]={serial:s,model:(r.device&&r.device.model)||"",jobs:0,pages:0,covPages:0});
+    m.jobs++; m.pages+=pages; m.covPages+=cov*pages; if(r.device&&r.device.model)m.model=r.device.model;
+  });
+  return Object.keys(map).map(s=>{const m=map[s];const avg=m.pages?m.covPages/m.pages:0;
+    return {serial:m.serial,model:m.model,jobs:m.jobs,pages:m.pages,avgCoverage:+avg.toFixed(2),contract:CONTRACT_PCT,delta:+(avg-CONTRACT_PCT).toFixed(2)};});
+}
+app.get("/api/summary",(_q,res)=>{ try{ res.json({contractPct:CONTRACT_PCT,devices:summarize()}); }catch(e){ res.status(500).json({error:e.message}); } });
+app.get("/dashboard",(_q,res)=>sendFile(res,"dashboard.html","html"));
+
 app.listen(PORT, () => console.log(`Coverage Meter backend on http://localhost:${PORT}`));
