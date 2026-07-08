@@ -1,56 +1,270 @@
-<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Coverage - Billing Dashboard</title>
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OptiYield · Fleet Coverage Monitor</title>
+<link rel="icon" type="image/svg+xml" href="/logo.svg">
 <style>
- body{margin:0;font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;background:#f4f5f7}
- .top{background:#fff;border-bottom:3px solid #cc0000;padding:12px 18px}
- .top b{font-size:18px}.top span{color:#6b7280;font-size:12px;display:block}
- .wrap{max-width:1000px;margin:0 auto;padding:16px}
- .bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px}
- #q{padding:9px 12px;border:1px solid #cbd0d8;border-radius:8px;font-size:14px;width:300px}
- .mut{color:#6b7280;font-size:12px}
- .site{background:#fff;border:1px solid #e5e7eb;border-radius:10px;margin-bottom:14px;overflow:hidden}
- .sh{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-left:6px solid #0a7d34}
- .site.over .sh{border-left-color:#cc0000;background:#fdf3f3}
- .sh .name{font-size:15px;font-weight:bold}.sh .meta{font-size:12px;color:#6b7280}
- .sh .cov{font-size:20px;font-weight:bold}
- .pill{font-size:11px;font-weight:bold;padding:2px 9px;border-radius:20px;margin-left:8px}
- .pill.over{background:#fdecec;color:#b40000}.pill.under{background:#e7f6ec;color:#0a7d34}
- table{border-collapse:collapse;width:100%;font-size:13px}
- th,td{border-top:1px solid #eee;padding:8px 16px;text-align:right}th:first-child,td:first-child{text-align:left}
- th{font-size:10px;text-transform:uppercase;color:#9aa1ab;background:#fafbfc}
- td.over{color:#b40000;font-weight:bold}td.under{color:#0a7d34;font-weight:bold}
- .empty{color:#6b7280;padding:20px;text-align:center}
-</style></head><body>
-<div class="top"><b>Coverage - Billing Dashboard</b><span>Actual page coverage vs contracted rate, by site</span></div>
-<div class="wrap">
- <div class="bar"><input id="q" placeholder="Search serial or site..."><div class="mut" id="sub">Loading...</div></div>
- <div id="list"></div>
+  :root{--bg:#040d1a;--pnl:#0c1c34;--pnl2:#0a1730;--line:#193052;--tx:#eaf1fb;--mut:#8ba0bd;--ok:#12d67f;--watch:#ffb020;--over:#ff2d2d}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--tx);font-family:'Inter',system-ui,'Segoe UI',Arial,sans-serif;font-size:14px}
+  a{color:inherit}
+  .wrap{max-width:1180px;margin:0 auto;padding:16px 18px 40px}
+  .top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+  .lock{display:flex;align-items:center;gap:11px}
+  .wm{font-size:22px;font-weight:800;letter-spacing:-.5px;line-height:1}
+  .wm .o{color:#fff}.wm .y{background:linear-gradient(120deg,#00E676,#00B0FF);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{font-size:10px;letter-spacing:3px;color:var(--mut);font-weight:700;margin-top:3px}
+  .tools{display:flex;gap:9px;align-items:center}
+  .in,.btn{background:var(--pnl);border:1px solid var(--line);color:var(--tx);border-radius:9px;padding:9px 12px;font-size:13px;outline:none}
+  .in::placeholder{color:#6f83a1}
+  .btn{cursor:pointer;font-weight:700;border:none;background:linear-gradient(120deg,#00E676,#00B0FF);color:#04263f}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+  .kpi{background:var(--pnl);border:1px solid var(--line);border-radius:13px;padding:13px 14px;position:relative;overflow:hidden}
+  .kpi:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(#00E676,#00B0FF)}
+  .kpi.warn:before{background:linear-gradient(#ffb020,#ff2d2d)}
+  .kpi .l{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.6px}
+  .kpi .v{font-size:26px;font-weight:800;margin-top:5px}.kpi .s{font-size:11px;margin-top:3px;color:var(--mut)}
+  .grid2{display:grid;grid-template-columns:1.2fr .8fr;gap:12px;margin-bottom:14px}
+  .card{background:var(--pnl);border:1px solid var(--line);border-radius:13px;padding:14px 16px}
+  .card h3{margin:0;font-size:13px;font-weight:700;color:#cdd9ea}
+  .chead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+  .pills{display:flex;gap:4px}
+  .rp{background:var(--pnl2);border:1px solid var(--line);color:var(--mut);border-radius:7px;padding:5px 9px;font-size:11.5px;cursor:pointer;font-weight:600}
+  .rp.on{background:linear-gradient(120deg,#00E676,#00B0FF);color:#04263f;border-color:transparent}
+  .xbtn{background:var(--pnl2);border:1px solid var(--line);color:#cdd9ea;border-radius:7px;padding:5px 9px;font-size:11.5px;cursor:pointer}
+  .legend{font-size:11px;color:var(--mut);display:flex;gap:14px;margin-top:9px;align-items:center;flex-wrap:wrap}
+  .scale{height:8px;width:120px;border-radius:5px;background:linear-gradient(90deg,#12d67f,#37e08a 38%,#ffd23d 52%,#ffab1a 60%,#ff5340 78%,#ff2020)}
+  .dotc{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;vertical-align:middle}
+  table{width:100%;border-collapse:collapse}
+  th,td{text-align:left;padding:9px 10px;font-size:13px;border-bottom:1px solid #142744}
+  th{color:var(--mut);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+  th.sortable{cursor:pointer}th .ar{opacity:.6;font-size:10px}
+  td.r,th.r{text-align:right}
+  .srow{cursor:pointer}.srow:hover{background:#0f2445}
+  .caret{display:inline-block;width:0;height:0;border-left:5px solid #6f88ad;border-top:4px solid transparent;border-bottom:4px solid transparent;margin-right:8px;transition:transform .15s}
+  .srow.open .caret{transform:rotate(90deg)}
+  .pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+  .pill.ok{background:rgba(18,214,127,.16);color:#3ff0a2}.pill.watch{background:rgba(255,176,32,.18);color:#ffc65c}.pill.over{background:rgba(255,45,45,.2);color:#ff6b6b}
+  .bar{height:7px;border-radius:4px;background:#12274a;position:relative;min-width:70px}.bar>i{position:absolute;left:0;top:0;bottom:0;border-radius:4px}
+  .mono{font-variant-numeric:tabular-nums}
+  .devwrap{background:#081428}.devwrap>td{padding:0}
+  .devtbl{width:100%}.devtbl td,.devtbl th{padding:7px 10px;border-bottom:1px solid #102138;font-size:12.5px}
+  .lnk{color:#5cc7ff;cursor:pointer;text-decoration:none}.lnk:hover{text-decoration:underline}
+  .toggle{display:flex;gap:0;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .toggle button{background:var(--pnl2);color:var(--mut);border:none;padding:7px 13px;font-size:12px;cursor:pointer;font-weight:600}
+  .toggle button.on{background:#12335c;color:#fff}
+  .pager{display:flex;gap:10px;align-items:center;justify-content:flex-end;margin-top:12px;color:var(--mut);font-size:12px}
+  .pager button{background:var(--pnl2);border:1px solid var(--line);color:var(--tx);border-radius:7px;padding:6px 11px;cursor:pointer}
+  .pager button[disabled]{opacity:.4;cursor:default}
+  .modal,.ov{position:fixed;inset:0;background:rgba(3,8,17,.82);display:none;align-items:center;justify-content:center;z-index:20;padding:22px}
+  .modal.show,.ov.show{display:flex}
+  .sheet{background:var(--pnl);border:1px solid var(--line);border-radius:15px;max-width:820px;width:100%;max-height:88vh;overflow:auto;padding:18px 20px}
+  .ovbox{background:var(--pnl);border:1px solid var(--line);border-radius:15px;max-width:1000px;width:100%;padding:18px 20px}
+  .muted{color:var(--mut)} .big{font-size:24px;font-weight:800}
+  .splash{position:fixed;inset:0;background:radial-gradient(900px 420px at 50% 20%,#0b1d38,#04101f 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;z-index:50;transition:opacity .5s}
+  .splash.hide{opacity:0;pointer-events:none}
+  .sbar{width:240px;height:6px;border-radius:6px;background:#12294a;overflow:hidden}
+  .sbar>i{display:block;height:100%;width:35%;border-radius:6px;background:linear-gradient(90deg,#00E676,#00B0FF);animation:load 1.6s ease-in-out infinite}
+  @keyframes load{0%{width:8%;transform:translateX(0)}50%{width:65%}100%{width:96%}}
+  @media(max-width:720px){.kpis{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
+</style></head>
+<body>
+<div class="splash" id="splash">
+  <div id="splashlogo"></div>
+  <div class="sbar"><i></i></div>
+  <div class="muted" style="font-size:13px">Loading fleet coverage…</div>
 </div>
+<div class="wrap">
+  <div class="top">
+    <div class="lock" id="brand"></div>
+    <div class="tools">
+      <input id="q" class="in" placeholder="Search serial or site…" style="width:210px">
+      <button class="btn" id="exportBtn">⤓ Export CSV</button>
+    </div>
+  </div>
+  <div class="kpis">
+    <div class="kpi"><div class="l">Devices</div><div class="v" id="k-dev">—</div><div class="s">across <span id="k-site">—</span> sites</div></div>
+    <div class="kpi"><div class="l">Fleet avg coverage</div><div class="v" id="k-avg">—</div><div class="s">contract 5% · tolerance 7%</div></div>
+    <div class="kpi warn"><div class="l">Over tolerance</div><div class="v" id="k-over">—</div><div class="s">devices above 7%</div></div>
+    <div class="kpi"><div class="l">Pages measured</div><div class="v" id="k-pg">—</div><div class="s" id="k-jobs">— jobs</div></div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <div class="chead"><h3>Fleet coverage trend</h3>
+        <div style="display:flex;gap:8px;align-items:center">
+          <div class="pills" id="rangepills"><button class="rp" data-r="7">7d</button><button class="rp on" data-r="30">30d</button><button class="rp" data-r="90">90d</button><button class="rp" data-r="0">All</button></div>
+          <button class="xbtn" id="expandBtn">⤢ Expand</button>
+        </div>
+      </div>
+      <div id="chart"></div>
+      <div class="legend"><span class="scale"></span><span>0%</span><span>5% contract</span><span>7% tolerance</span><span>10%+</span></div>
+    </div>
+    <div class="card"><div class="chead"><h3>Coverage by site</h3></div><div id="bars"></div></div>
+  </div>
+  <div class="card">
+    <div class="chead">
+      <div class="toggle"><button id="tabSites" class="on">Sites</button><button id="tabDevices">Devices</button></div>
+      <div class="legend" style="margin:0"><span><span class="dotc" style="background:#12d67f"></span>≤5</span><span><span class="dotc" style="background:#ffb020"></span>5–7</span><span><span class="dotc" style="background:#ff2d2d"></span>&gt;7</span></div>
+    </div>
+    <div id="tableWrap"></div>
+    <div class="pager" id="pager"></div>
+  </div>
+</div>
+
+<div class="modal" id="devModal"><div class="sheet" id="devSheet"></div></div>
+<div class="ov" id="chartOv"><div class="ovbox"><div class="chead"><h3>Fleet coverage trend</h3><button class="xbtn" id="ovClose">✕ Close</button></div><div id="chartBig"></div></div></div>
+
 <script>
-function pv(x){return (Math.round(x*100)/100).toFixed(2)+'%';}
-var DATA=null;
-var xhr=new XMLHttpRequest();xhr.open('GET','/api/summary',true);
-xhr.onreadystatechange=function(){if(xhr.readyState===4&&xhr.status===200){DATA=JSON.parse(xhr.responseText);render();}};
-xhr.send();
-document.getElementById('q').oninput=render;
-function render(){
- if(!DATA)return;
- var q=(document.getElementById('q').value||'').toLowerCase();
- var sites=[];
- for(var i=0;i<DATA.sites.length;i++){var s=DATA.sites[i];
-  var devs=[];for(var j=0;j<s.devices.length;j++){var d=s.devices[j];
-   if(!q||(d.serial+' '+(d.model||'')+' '+s.site).toLowerCase().indexOf(q)>=0)devs.push(d);}
-  if(devs.length>0)sites.push({s:s,devs:devs});}
- document.getElementById('sub').textContent='Contracted '+DATA.contractPct+'%  -  '+DATA.siteCount+' sites, '+DATA.deviceCount+' devices';
- var html='';
- if(sites.length===0){html='<div class="empty">No devices match your search.</div>';}
- for(var k=0;k<sites.length;k++){var s=sites[k].s,devs=sites[k].devs,over=s.over;
-  html+='<div class="site'+(over?' over':'')+'"><div class="sh"><div><div class="name">'+s.site+'</div><div class="meta">'+s.deviceCount+' devices  -  '+s.pages+' pages</div></div>';
-  html+='<div style="text-align:right"><span class="cov" style="color:'+(over?'#b40000':'#0a7d34')+'">'+pv(s.avgCoverage)+'</span><span class="pill '+(over?'over':'under')+'">'+(over?'OVER':'under')+' '+(s.delta>=0?'+':'')+pv(s.delta)+'</span><div class="meta">site avg vs '+DATA.contractPct+'%</div></div></div>';
-  html+='<table><tr><th>Serial</th><th>Model</th><th>Jobs</th><th>Pages</th><th>Coverage</th><th>Diff</th><th>Status</th></tr>';
-  for(var j=0;j<devs.length;j++){var d=devs[j];var cls=d.over?'over':'under';
-   html+='<tr><td>'+d.serial+'</td><td>'+(d.model||'')+'</td><td>'+d.jobs+'</td><td>'+d.pages+'</td><td><b>'+pv(d.avgCoverage)+'</b></td><td class="'+cls+'">'+(d.delta>=0?'+':'')+pv(d.delta)+'</td><td><span class="pill '+cls+'">'+(d.over?'Over':'Under')+'</span></td></tr>';}
-  html+='</table></div>';}
- document.getElementById('list').innerHTML=html;
+const CONTRACT=5,TOL=7;
+const state={range:30,from:isoAgo(30),to:null,search:"",view:"sites",page:1,pageSize:25,sort:"coverage",order:"desc",series:[]};
+function isoAgo(d){return d?new Date(Date.now()-d*864e5).toISOString():null;}
+function esc(t){return String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function lerpHex(h1,h2,t){const p=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];const a=p(h1),b=p(h2);return"#"+a.map((x,i)=>("0"+Math.round(x+(b[i]-x)*t).toString(16)).slice(-2)).join("");}
+function covColor(v){const s=[[0,"#12d67f"],[5,"#37e08a"],[6.2,"#ffd23d"],[7,"#ffab1a"],[9,"#ff5340"],[12,"#ff2020"]];if(v<=s[0][0])return s[0][1];for(let i=1;i<s.length;i++){if(v<=s[i][0]){const a=s[i-1],b=s[i];return lerpHex(a[1],b[1],(v-a[0])/(b[0]-a[0]));}}return s[s.length-1][1];}
+function band(v){return v<=CONTRACT?"ok":v<=TOL?"watch":"over";}
+function bandLabel(v){return v<=CONTRACT?"On track":v<=TOL?"Watch":"Over";}
+function num(n){return (+n||0).toLocaleString();}
+async function api(p){const r=await fetch(p);if(!r.ok)throw new Error(p+" "+r.status);return r.json();}
+
+const BRAND=`<svg width="44" height="44" viewBox="80 86 128 128" aria-hidden="true"><defs>
+  <linearGradient id="cH" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#00E5FF"/><stop offset="1" stop-color="#0083B0"/></linearGradient>
+  <linearGradient id="mH" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#FF007F"/><stop offset="1" stop-color="#A100FF"/></linearGradient>
+  <linearGradient id="yH" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#FFEA00"/><stop offset="1" stop-color="#FF9100"/></linearGradient>
+  <linearGradient id="gH" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#00E676"/><stop offset="1" stop-color="#00B0FF"/></linearGradient>
+  <style>#gwH{transform-origin:140px 150px;animation:spinH 24s linear infinite}#arH{transform-origin:140px 150px;animation:flH 3s ease-in-out infinite}@keyframes spinH{to{transform:rotate(360deg)}}@keyframes flH{0%,100%{transform:translate(0,0)}50%{transform:translate(2px,-3px)}}</style></defs>
+  <g id="gwH"><path d="M 121.18,97.91 A 55,55 0 0,1 182.13,114.64" fill="none" stroke="url(#cH)" stroke-width="14" stroke-linecap="round"/><path d="M 112.5,202.33 A 55,55 0 0,1 191.68,131.18" fill="none" stroke="url(#mH)" stroke-width="14" stroke-linecap="round"/><path d="M 195,150 A 55,55 0 0,1 129.58,203.95" fill="none" stroke="url(#yH)" stroke-width="14" stroke-linecap="round"/></g>
+  <path id="arH" d="M 125,170 L 162,132 M 162,132 L 145,132 M 162,132 L 162,149 M 118,155 L 134,139" fill="none" stroke="url(#gH)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/><circle cx="140" cy="150" r="5" fill="#cfe0f5"/></svg>`;
+document.getElementById("brand").innerHTML=BRAND+`<div><div class="wm"><span class="o">Opti</span><span class="y">Yield</span></div><div class="sub">FLEET&nbsp;COVERAGE&nbsp;MONITOR</div></div>`;
+document.getElementById("splashlogo").innerHTML=`<div style="transform:scale(1.6)">${BRAND}</div><div class="wm" style="text-align:center;margin-top:14px"><span class="o">Opti</span><span class="y">Yield</span></div>`;
+
+function seriesChart(el,W,H,series){
+  const pts=(series&&series.length?series:[{date:"",avg:0}]).map(p=>p.avg);
+  const n=pts.length,pad=30,maxV=Math.max(12,Math.ceil(Math.max.apply(null,pts)+1));
+  const xs=i=>n<2?pad:(pad+i*((W-pad-10)/(n-1))),ys=v=>H-pad-(v/maxV)*(H-pad-12);
+  let d=pts.map((v,i)=>(i?"L":"M")+xs(i).toFixed(1)+","+ys(v).toFixed(1)).join(" ");
+  const area=d+" L"+xs(n-1).toFixed(1)+","+(H-pad)+" L"+xs(0).toFixed(1)+","+(H-pad)+" Z";
+  let s=`<svg width="100%" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="max-width:100%;display:block"><defs>
+    <linearGradient id="ln${W}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#00E676"/><stop offset="1" stop-color="#00B0FF"/></linearGradient>
+    <linearGradient id="ar${W}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#00B0FF" stop-opacity=".30"/><stop offset="1" stop-color="#00B0FF" stop-opacity="0"/></linearGradient></defs>`;
+  for(let g=0;g<=maxV;g+=Math.ceil(maxV/3)){const gy=ys(g);s+=`<line x1="${pad}" y1="${gy}" x2="${W-10}" y2="${gy}" stroke="#12274a"/><text x="4" y="${gy+4}" fill="#6f83a1" font-size="10">${g}%</text>`;}
+  s+=`<path d="${area}" fill="url(#ar${W})"/>`;
+  s+=`<line x1="${pad}" y1="${ys(7)}" x2="${W-10}" y2="${ys(7)}" stroke="#ffb020" stroke-width="1.3" stroke-dasharray="3 4"/>`;
+  s+=`<line x1="${pad}" y1="${ys(5)}" x2="${W-10}" y2="${ys(5)}" stroke="#ff2d2d" stroke-width="1.5" stroke-dasharray="5 4"/>`;
+  s+=`<path d="${d}" fill="none" stroke="url(#ln${W})" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`;
+  if(n)s+=`<circle cx="${xs(n-1).toFixed(1)}" cy="${ys(pts[n-1]).toFixed(1)}" r="4" fill="#00E676"/>`;
+  s+=`</svg>`;el.innerHTML=s;
 }
-</script></body></html>
+function redrawChart(){seriesChart(document.getElementById("chart"),440,150,state.series);if(document.getElementById("chartOv").classList.contains("show"))seriesChart(document.getElementById("chartBig"),920,360,state.series);}
+
+async function loadStats(){
+  const qs=`from=${state.from||""}&to=${state.to||""}`;
+  const s=await api(`/api/stats?${qs}`);state.series=s.series||[];
+  document.getElementById("k-dev").textContent=num(s.devices);
+  document.getElementById("k-site").textContent=num(s.sites);
+  const ka=document.getElementById("k-avg");ka.textContent=(s.avgCoverage||0).toFixed(2)+"%";ka.style.color=covColor(s.avgCoverage||0);
+  document.getElementById("k-over").textContent=num(s.devicesOver);
+  document.getElementById("k-pg").textContent=num(s.pages);
+  document.getElementById("k-jobs").textContent=num(s.jobs)+" jobs";
+  redrawChart();
+}
+function pagerHTML(total){
+  const pages=Math.max(1,Math.ceil(total/state.pageSize));
+  return `<button ${state.page<=1?"disabled":""} id="prev">‹ Prev</button><span>Page ${state.page} of ${pages} · ${num(total)} ${state.view}</span><button ${state.page>=pages?"disabled":""} id="next">Next ›</button>`;
+}
+function bindPager(total){
+  const pages=Math.max(1,Math.ceil(total/state.pageSize));
+  const p=document.getElementById("prev"),n=document.getElementById("next");
+  if(p)p.onclick=()=>{if(state.page>1){state.page--;loadList();}};
+  if(n)n.onclick=()=>{if(state.page<pages){state.page++;loadList();}};
+}
+function colHead(label,key,extraClass){const ar=state.sort===key?(state.order==="asc"?" ▲":" ▼"):"";return `<th class="sortable ${extraClass||""}" data-k="${key}">${label}<span class="ar">${ar}</span></th>`;}
+function bindSort(){document.querySelectorAll("th.sortable").forEach(th=>th.onclick=()=>{const k=th.getAttribute("data-k");if(state.sort===k)state.order=state.order==="asc"?"desc":"asc";else{state.sort=k;state.order="desc";}state.page=1;loadList();});}
+
+async function loadList(){
+  const qs=`from=${state.from||""}&to=${state.to||""}&search=${encodeURIComponent(state.search)}&page=${state.page}&pageSize=${state.pageSize}&sort=${state.sort}&order=${state.order}`;
+  const w=document.getElementById("tableWrap");
+  if(state.view==="sites"){
+    const data=await api(`/api/sites?${qs}`);
+    let h=`<table><thead><tr>${colHead("Site","name")}${colHead("Devices","devices","r")}${colHead("Pages","pages","r")}${colHead("Avg coverage","coverage","r")}<th class="r">vs 5%</th><th>Last job</th><th class="r">Status</th></tr></thead><tbody>`;
+    data.sites.forEach(s=>{const c=covColor(s.avgCoverage);
+      h+=`<tr class="srow" data-site="${esc(s.site)}"><td><span class="caret"></span>${esc(s.site)}</td><td class="r">${s.deviceCount}</td><td class="r mono">${num(s.pages)}</td>
+        <td class="r mono" style="color:${c};font-weight:700"><span class="dotc" style="background:${c}"></span>${s.avgCoverage.toFixed(2)}%</td>
+        <td class="r mono" style="color:${c}">${s.delta>=0?"+":""}${s.delta.toFixed(2)}</td>
+        <td class="mono muted">${esc(s.lastSeen)}</td><td class="r"><span class="pill ${band(s.avgCoverage)}">${bandLabel(s.avgCoverage)}</span></td></tr>
+        <tr class="devwrap" data-for="${esc(s.site)}" style="display:none"><td colspan="7"><div class="load muted" style="padding:10px">Loading devices…</div></td></tr>`;});
+    h+=`</tbody></table>`;w.innerHTML=h;
+    document.querySelectorAll(".srow").forEach(tr=>tr.onclick=()=>toggleSite(tr));
+    document.getElementById("pager").innerHTML=pagerHTML(data.total);bindPager(data.total);bindSort();
+  }else{
+    const data=await api(`/api/devices?${qs}`);
+    let h=`<table><thead><tr>${colHead("Serial","serial")}<th>Model</th>${colHead("Site","site")}${colHead("Pages","pages","r")}${colHead("Avg coverage","coverage","r")}<th class="r">Last job</th><th>When</th><th class="r">Status</th></tr></thead><tbody>`;
+    data.devices.forEach(d=>{const c=covColor(d.avgCoverage),lc=d.lastCoverage==null?c:covColor(d.lastCoverage);
+      h+=`<tr class="srow" data-serial="${esc(d.serial)}"><td class="mono lnk">${esc(d.serial)}</td><td class="muted">${esc(d.model)}</td><td>${esc(d.site)}</td><td class="r mono">${num(d.pages)}</td>
+        <td class="r mono" style="color:${c};font-weight:700"><span class="dotc" style="background:${c}"></span>${d.avgCoverage.toFixed(2)}%</td>
+        <td class="r mono" style="color:${lc}">${d.lastCoverage==null?"—":d.lastCoverage.toFixed(2)+"%"}</td>
+        <td class="mono muted">${esc(d.lastAt||"")}</td><td class="r"><span class="pill ${band(d.avgCoverage)}">${bandLabel(d.avgCoverage)}</span></td></tr>`;});
+    h+=`</tbody></table>`;w.innerHTML=h;
+    document.querySelectorAll(".srow").forEach(tr=>tr.onclick=()=>openDevice(tr.getAttribute("data-serial")));
+    document.getElementById("pager").innerHTML=pagerHTML(data.total);bindPager(data.total);bindSort();
+  }
+  // bars from current sites page (top)
+  loadBars();
+}
+async function loadBars(){
+  try{const data=await api(`/api/sites?from=${state.from||""}&to=${state.to||""}&page=1&pageSize=8&sort=coverage&order=desc`);
+    const max=Math.max.apply(null,data.sites.map(s=>s.avgCoverage).concat([8]));
+    document.getElementById("bars").innerHTML=data.sites.map(s=>{const c=covColor(s.avgCoverage),wd=Math.max(4,s.avgCoverage/max*100);
+      return `<div style="margin:10px 0"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="color:#cdd9ea">${esc(s.site)}</span><span class="mono" style="color:${c}">${s.avgCoverage.toFixed(1)}%</span></div><div class="bar"><i style="width:${wd}%;background:${c}"></i></div></div>`;}).join("");
+  }catch(e){}
+}
+async function toggleSite(tr){
+  const dr=tr.nextElementSibling;const open=dr.style.display!=="none";
+  dr.style.display=open?"none":"table-row";tr.classList.toggle("open",!open);
+  if(open||dr.getAttribute("data-loaded"))return;
+  const site=tr.getAttribute("data-site");
+  try{const data=await api(`/api/site/${encodeURIComponent(site)}?from=${state.from||""}&to=${state.to||""}`);
+    let h=`<table class="devtbl"><thead><tr><th>Serial</th><th>Model</th><th class="r">Pages</th><th class="r">Avg</th><th class="r">Last job</th><th>When</th><th class="r">Status</th></tr></thead><tbody>`;
+    data.devices.forEach(d=>{const c=covColor(d.avgCoverage),lc=d.lastCoverage==null?c:covColor(d.lastCoverage);
+      h+=`<tr><td class="mono lnk" data-serial="${esc(d.serial)}">${esc(d.serial)}</td><td class="muted">${esc(d.model)}</td><td class="r mono">${num(d.pages)}</td>
+        <td class="r mono" style="color:${c};font-weight:700">${d.avgCoverage.toFixed(2)}%</td>
+        <td class="r mono" style="color:${lc}">${d.lastCoverage==null?"—":d.lastCoverage.toFixed(2)+"%"}</td>
+        <td class="mono muted">${esc(d.lastAt||"")}</td><td class="r"><span class="pill ${band(d.avgCoverage)}">${bandLabel(d.avgCoverage)}</span></td></tr>`;});
+    h+=`</tbody></table>`;dr.querySelector("td").innerHTML=h;dr.setAttribute("data-loaded","1");
+    dr.querySelectorAll("[data-serial]").forEach(td=>td.onclick=()=>openDevice(td.getAttribute("data-serial")));
+  }catch(e){dr.querySelector("td").innerHTML=`<div class="muted" style="padding:10px">Could not load devices.</div>`;}
+}
+async function openDevice(serial){
+  const m=document.getElementById("devModal"),sh=document.getElementById("devSheet");
+  sh.innerHTML=`<div class="muted">Loading ${esc(serial)}…</div>`;m.classList.add("show");
+  try{const data=await api(`/api/device/${encodeURIComponent(serial)}?from=${state.from||""}&to=${state.to||""}&limit=100`);
+    const d=data.device,c=covColor(d.avgCoverage);
+    let h=`<div class="chead"><div><div class="big">${esc(d.serial)}</div><div class="muted">${esc(d.model)} · ${esc(d.site)}</div></div><button class="xbtn" id="mClose">✕ Close</button></div>
+      <div class="kpis" style="grid-template-columns:repeat(4,1fr)">
+        <div class="kpi"><div class="l">Avg coverage</div><div class="v" style="color:${c}">${d.avgCoverage.toFixed(2)}%</div><div class="s">${bandLabel(d.avgCoverage)} · vs 5%: ${d.delta>=0?"+":""}${d.delta.toFixed(2)}</div></div>
+        <div class="kpi"><div class="l">Last job</div><div class="v" style="color:${d.lastCoverage==null?"#fff":covColor(d.lastCoverage)}">${d.lastCoverage==null?"—":d.lastCoverage.toFixed(2)+"%"}</div><div class="s">${esc(d.lastAt||"")}</div></div>
+        <div class="kpi"><div class="l">Jobs</div><div class="v">${num(d.jobs)}</div><div class="s">in range</div></div>
+        <div class="kpi"><div class="l">Pages</div><div class="v">${num(d.pages)}</div><div class="s">measured</div></div>
+      </div>
+      <div class="card" style="margin-bottom:12px"><div class="chead"><h3>Coverage over time</h3></div><div id="devChart"></div></div>
+      <div class="card"><div class="chead"><h3>Recent jobs</h3></div><table class="devtbl"><thead><tr><th>When</th><th class="r">Pages</th><th class="r">Coverage</th><th class="r">Status</th></tr></thead><tbody>`;
+    data.jobs.forEach(j=>{h+=`<tr><td class="mono muted">${esc(j.at)}</td><td class="r mono">${num(j.pages)}</td><td class="r mono" style="color:${covColor(j.coverage)};font-weight:700">${j.coverage.toFixed(2)}%</td><td class="r"><span class="pill ${band(j.coverage)}">${bandLabel(j.coverage)}</span></td></tr>`;});
+    h+=`</tbody></table></div>`;sh.innerHTML=h;
+    seriesChart(document.getElementById("devChart"),740,180,data.series);
+    document.getElementById("mClose").onclick=()=>m.classList.remove("show");
+  }catch(e){sh.innerHTML=`<div class="chead"><div class="big">${esc(serial)}</div><button class="xbtn" id="mClose">✕ Close</button></div><div class="muted">Could not load device.</div>`;document.getElementById("mClose").onclick=()=>m.classList.remove("show");}
+}
+
+function setRange(r){state.range=+r;state.from=isoAgo(+r);state.page=1;document.querySelectorAll("#rangepills .rp").forEach(b=>b.classList.toggle("on",+b.getAttribute("data-r")===state.range));loadStats();loadList();}
+document.getElementById("rangepills").onclick=e=>{if(e.target.classList.contains("rp"))setRange(e.target.getAttribute("data-r"));};
+document.getElementById("expandBtn").onclick=()=>{document.getElementById("chartOv").classList.add("show");redrawChart();};
+document.getElementById("ovClose").onclick=()=>document.getElementById("chartOv").classList.remove("show");
+let qt;document.getElementById("q").oninput=e=>{clearTimeout(qt);qt=setTimeout(()=>{state.search=e.target.value.trim();state.page=1;loadList();},300);};
+document.getElementById("tabSites").onclick=()=>{state.view="sites";state.sort="coverage";state.page=1;document.getElementById("tabSites").classList.add("on");document.getElementById("tabDevices").classList.remove("on");loadList();};
+document.getElementById("tabDevices").onclick=()=>{state.view="devices";state.sort="coverage";state.page=1;document.getElementById("tabDevices").classList.add("on");document.getElementById("tabSites").classList.remove("on");loadList();};
+document.getElementById("exportBtn").onclick=()=>{window.location=`/api/export?scope=${state.view}&from=${state.from||""}&to=${state.to||""}&search=${encodeURIComponent(state.search)}&sort=${state.sort}&order=${state.order}`;};
+
+(async function init(){
+  try{await Promise.all([loadStats(),loadList()]);}catch(e){console.warn(e);}
+  setTimeout(()=>document.getElementById("splash").classList.add("hide"),650);
+})();
+</script>
+</body></html>

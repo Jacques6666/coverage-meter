@@ -6,7 +6,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { rasterize } from "./rasterize.js";
 import { analyzePixels, classify, buildReport } from "./coverage.js";
-import { record, recent, recentDb } from "./telemetry.js";
+import * as store from "./telemetry.js";
 import { releaseToPrint } from "./eip.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -15,18 +15,21 @@ const PORT = process.env.PORT || 3000;
 const upload = multer({ dest: os.tmpdir(), limits: { fileSize: 50 * 1024 * 1024 } });
 app.use(express.json({ limit: "2mb" }));
 
-const ICON_B64 = "iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAIAAABMXPacAAACNklEQVR42u3dUXaDIBBG4crJjrL/HaRrsg99zzFGmB/87nMbYO4MSKK4vX5QSRMCAggAAQSAAAJAAAEggAAQQAAIIAAEEAACCAABBIAAAkAAASCAAFzHY7oeP/f9/R/8bttEw9le80d8ah+5Ar6M+ywmEgVcHvpkDVkCuoY+U0OKgGGhT9PQbhv9wnazBNRGodxB5RSUkIDl01ET/dr+NNGv7VUT/dq+jV4DLhnhm/m69+fPLeCb6JwIyuDmzjHBt6GnY/H/j8kz3tAKOBGIC9OwtvV6AZ+Ov9PgQ7ox+iooZ9iffvKA6SvuJ8neSZf2dXSLSv8x0fmold5F0O6T+5l10ELSf3xEjrfYtQja3XI/rQ5aQvrn028sj9umf0gRuDNu0SnoYM3OdRebCiBg6U2pCiAAawhYaQewbAVYAExBBIAAAggAAQSAAAIGY7fcUYBdrimIAOQLsAyogHUFHFyHFYEKKKb+xqznvhdetpbfvdqxAlbaDfQbi8M6ll4DQm4Bz5x84hbhkQ5yrr66C4h6HuhEK71XsrjL0N4O0nYeIwTkPBwa+JywJ+WLL6MnOKzjy0CUNDrTTvhgBAefljIM5wUV7+ELDu0LT8zB36C05UcY3rd2k3HG9srzAcX9qT87unxJqE2FdtvUCylEh3XcbB8QMh15f0CZBm/QKNPgHTI1JrxFabQP7xHDbJehBIAAAkAAASCAABBAAAggAAQQAAIIAAEEgAACQAABIIAAEEAALuMPKZTgG6zepFYAAAAASUVORK5CYII=";
-try { const ip = path.join(__dirname, "icon.png"); if (!fs.existsSync(ip)) fs.writeFileSync(ip, Buffer.from(ICON_B64, "base64")); } catch (e) {}
+const send = (res, file, type) => { res.type(type); fs.createReadStream(path.join(__dirname, file)).on("error", () => res.status(404).end()).pipe(res); };
+app.get(["/", "/dashboard"], (_q, res) => send(res, "dashboard.html", "html"));
+app.get("/tool", (_q, res) => send(res, "index.html", "html"));
+app.get("/logo.svg", (_q, res) => send(res, "logo.svg", "image/svg+xml"));
+app.get("/description.xml", (_q, res) => send(res, "description.xml", "application/xml"));
+app.get("/icon.png", (_q, res) => send(res, "icon.png", "image/png"));
+app.get("/healthz", (_q, res) => res.json({ ok: true, pg: store.usingPg(), time: new Date().toISOString() }));
 
-const sendFile = (res, file, type) => { res.type(type); fs.createReadStream(path.join(__dirname, file)).on("error", () => res.status(404).end()).pipe(res); };
+// ---- ingest: on-site metering proxy posts each job here ----
+app.post("/api/ingest", (req, res) => {
+  try { const b = req.body || {}; store.record({ reportType: "pageCoverage", schemaVersion: "1.0", device: b.device || {}, job: b.job || {}, coverage: b.coverage || {}, generatedAt: b.generatedAt || new Date().toISOString() }); res.json({ ok: true }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
 
-// Billing dashboard is the default page; the manual tool lives at /tool
-app.get(["/", "/dashboard"], (_q, res) => sendFile(res, "dashboard.html", "html"));
-app.get("/tool", (_q, res) => sendFile(res, "index.html", "html"));
-app.get("/description.xml", (_q, res) => sendFile(res, "description.xml", "application/xml"));
-app.get("/icon.png", (_q, res) => sendFile(res, "icon.png", "image/png"));
-app.get("/healthz", (_q, res) => res.json({ ok: true, time: new Date().toISOString() }));
-
+// ---- coverage tool endpoints (kept, used by /tool) ----
 app.post("/api/analyze", upload.single("file"), async (req, res) => {
   if (!req.file) return res.status(400).json({ error: "no file uploaded (field name: file)" });
   const dpi = Math.min(300, Math.max(72, parseInt(req.body.dpi, 10) || 150));
@@ -34,15 +37,14 @@ app.post("/api/analyze", upload.single("file"), async (req, res) => {
     const frames = rasterize(req.file.path, req.file.mimetype, dpi);
     const pages = frames.map((f, i) => { const c = analyzePixels(f.width, f.height, f.data, f.channels); return { page: i + 1, ...c, type: classify(c) }; });
     const report = buildReport(pages, { model: req.body.model, serialNumber: req.body.serial, source: req.file.originalname, dpi });
-    if (req.body.report !== "false") record(report);
+    if (req.body.report !== "false") store.record(report);
     res.json(report);
   } catch (err) { res.status(500).json({ error: err.message }); }
   finally { fs.rm(req.file.path, { force: true }, () => {}); }
 });
-app.post("/api/telemetry", (req, res) => { try { res.json(record(req.body)); } catch (e) { res.status(500).json({ error: e.message }); } });
-app.get("/api/telemetry/recent", (req, res) => res.json(recent(parseInt(req.query.limit, 10) || 50)));
+app.post("/api/telemetry", (req, res) => { try { res.json(store.record(req.body)); } catch (e) { res.status(500).json({ error: e.message }); } });
+app.get("/api/telemetry/recent", (req, res) => res.json(store.recent(parseInt(req.query.limit, 10) || 50)));
 app.post("/api/release-print", async (req, res) => { try { res.json(await releaseToPrint({ deviceUrl: req.body.deviceUrl, filePath: req.body.filePath, dryRun: req.body.dryRun !== false })); } catch (e) { res.status(500).json({ error: e.message }); } });
-
 function makeSamplePage() {
   const W = 1000, H = 1400, ch = 4; const data = new Uint8Array(W * H * ch); data.fill(255);
   const rect = (x0, y0, x1, y1, r, g, b) => { for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) { const i = (y * W + x) * 4; data[i] = r; data[i+1] = g; data[i+2] = b; data[i+3] = 255; } };
@@ -53,48 +55,71 @@ function makeSamplePage() {
 app.get("/api/analyze-sample", (req, res) => {
   try { const f = makeSamplePage(); const c = analyzePixels(f.width, f.height, f.data, f.channels);
     const report = buildReport([{ page: 1, ...c, type: classify(c) }], { model: req.query.model || "Xerox AltaLink C8135", serialNumber: req.query.serial || "panel-test", source: "sample", dpi: 150 });
-    record(report); res.json(report);
+    store.record(report); res.json(report);
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// --- Billing summary: devices grouped by site, with site totals vs contract ---
-const CONTRACT_PCT = 5;
-const SEED = [
-  {device:{serialNumber:"3776005117",model:"Xerox AltaLink C8135",site:"Altron - Woodmead"},job:{pages:12},coverage:{avgTotalAreaCoveragePct:7.8}},
-  {device:{serialNumber:"3776005117",model:"Xerox AltaLink C8135",site:"Altron - Woodmead"},job:{pages:3},coverage:{avgTotalAreaCoveragePct:6.2}},
-  {device:{serialNumber:"XRX-8145-0042",model:"Xerox AltaLink C8145",site:"Altron - Woodmead"},job:{pages:40},coverage:{avgTotalAreaCoveragePct:3.1}},
-  {device:{serialNumber:"XRX-C7025-0113",model:"Xerox VersaLink C7025",site:"Acme Attorneys - Sandton"},job:{pages:60},coverage:{avgTotalAreaCoveragePct:11.5}},
-  {device:{serialNumber:"XRX-C8155-0210",model:"Xerox AltaLink C8155",site:"Acme Attorneys - Sandton"},job:{pages:30},coverage:{avgTotalAreaCoveragePct:9.2}},
-  {device:{serialNumber:"XRX-B8055-0009",model:"Xerox AltaLink B8055",site:"Metro Clinic - Durban"},job:{pages:120},coverage:{avgTotalAreaCoveragePct:2.4}},
-  {device:{serialNumber:"XRX-B7035-0044",model:"Xerox VersaLink B7035",site:"Metro Clinic - Durban"},job:{pages:80},coverage:{avgTotalAreaCoveragePct:3.8}}
-];
-async function summarize(){
-  let recs; try { recs = await recentDb(3000); } catch(e){ recs = []; }
-  const all = SEED.concat(recs); const dmap = {};
-  all.forEach(r=>{
-    const s=(r.device&&r.device.serialNumber)||"unknown";
-    const site=(r.device&&r.device.site)||"Unassigned";
-    const cov=(r.coverage&&r.coverage.avgTotalAreaCoveragePct)||0;
-    const pages=(r.job&&r.job.pages)||1;
-    const d=dmap[s]||(dmap[s]={serial:s,model:(r.device&&r.device.model)||"",site:site,jobs:0,pages:0,covPages:0});
-    d.jobs++; d.pages+=pages; d.covPages+=cov*pages; if(r.device&&r.device.model)d.model=r.device.model; d.site=site;
-  });
-  const devices = Object.keys(dmap).map(s=>{const d=dmap[s];const avg=d.pages?d.covPages/d.pages:0;
-    return {serial:d.serial,model:d.model,site:d.site,jobs:d.jobs,pages:d.pages,avgCoverage:+avg.toFixed(2),delta:+(avg-CONTRACT_PCT).toFixed(2),over:avg>CONTRACT_PCT};});
-  const smap={};
-  devices.forEach(d=>{const g=smap[d.site]||(smap[d.site]={site:d.site,devices:[],pages:0,covPages:0});g.devices.push(d);g.pages+=d.pages;g.covPages+=d.avgCoverage*d.pages;});
-  const sites=Object.keys(smap).map(k=>{const g=smap[k];const avg=g.pages?g.covPages/g.pages:0;
-    g.devices.sort((a,b)=>b.avgCoverage-a.avgCoverage);
-    return {site:g.site,deviceCount:g.devices.length,pages:g.pages,avgCoverage:+avg.toFixed(2),delta:+(avg-CONTRACT_PCT).toFixed(2),over:avg>CONTRACT_PCT,devices:g.devices};});
-  sites.sort((a,b)=>b.avgCoverage-a.avgCoverage);
-  return {contractPct:CONTRACT_PCT, siteCount:sites.length, deviceCount:devices.length, sites:sites};
+// ---- dashboard data API ----
+const range = req => ({ from: req.query.from, to: req.query.to });
+const clampSize = v => Math.min(200, Math.max(1, parseInt(v, 10) || 25));
+app.get("/api/stats",  async (req, res) => { try { res.json(await store.stats(range(req))); } catch (e) { res.status(500).json({ error: e.message }); } });
+app.get("/api/sites",  async (req, res) => { try { res.json(await store.sites({ ...range(req), search: req.query.search, page: +req.query.page || 1, pageSize: clampSize(req.query.pageSize), sort: req.query.sort, order: req.query.order })); } catch (e) { res.status(500).json({ error: e.message }); } });
+app.get("/api/devices",async (req, res) => { try { res.json(await store.devices({ ...range(req), search: req.query.search, page: +req.query.page || 1, pageSize: clampSize(req.query.pageSize), sort: req.query.sort, order: req.query.order })); } catch (e) { res.status(500).json({ error: e.message }); } });
+app.get("/api/site/:site",     async (req, res) => { try { res.json(await store.siteDetail({ site: req.params.site, ...range(req) })); } catch (e) { res.status(500).json({ error: e.message }); } });
+app.get("/api/device/:serial", async (req, res) => { try { res.json(await store.deviceDetail({ serial: req.params.serial, ...range(req), limit: Math.min(500, +req.query.limit || 50) })); } catch (e) { res.status(500).json({ error: e.message }); } });
+app.get("/api/search", async (req, res) => { try { res.json(await store.search({ q: req.query.q })); } catch (e) { res.status(500).json({ error: e.message }); } });
+
+// ---- CSV export ----
+const csvCell = v => { v = String(v == null ? "" : v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+app.get("/api/export", async (req, res) => {
+  try {
+    const scope = req.query.scope === "devices" ? "devices" : "sites"; const r = range(req);
+    let header, rows;
+    if (scope === "devices") {
+      const d = await store.devices({ ...r, search: req.query.search, page: 1, pageSize: 100000, sort: req.query.sort, order: req.query.order });
+      header = ["Serial", "Model", "Site", "Jobs", "Pages", "AvgCoverage%", "DeltaVsContract", "Status", "LastJob%", "LastSeen"];
+      rows = d.devices.map(x => [x.serial, x.model, x.site, x.jobs, x.pages, x.avgCoverage, x.delta, x.over ? "OVER" : "ok", x.lastCoverage, x.lastAt]);
+    } else {
+      const s = await store.sites({ ...r, search: req.query.search, page: 1, pageSize: 100000, sort: req.query.sort, order: req.query.order });
+      header = ["Site", "Devices", "Pages", "AvgCoverage%", "DeltaVsContract", "Status", "LastSeen"];
+      rows = s.sites.map(x => [x.site, x.deviceCount, x.pages, x.avgCoverage, x.delta, x.over ? "OVER" : "ok", x.lastSeen]);
+    }
+    const csv = [header.join(",")].concat(rows.map(r => r.map(csvCell).join(","))).join("\n");
+    res.type("text/csv"); res.set("Content-Disposition", `attachment; filename="optiyield-${scope}.csv"`); res.send(csv);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// ---- demo seed (until real data flows). Disable with DEMO_SEED=0 ----
+async function seedIfEmpty() {
+  await store.ready();
+  if (process.env.DEMO_SEED === "0") return;
+  const s = await store.stats();
+  if (s.devices > 0) return;
+  const base = [
+    ["3776005117", "Xerox AltaLink C8135", "Altron - Woodmead", 7.6],
+    ["XRX-8145-0042", "Xerox AltaLink C8145", "Altron - Woodmead", 3.1],
+    ["XRX-C7025-0113", "Xerox VersaLink C7025", "Acme Attorneys - Sandton", 11.4],
+    ["XRX-C8155-0210", "Xerox AltaLink C8155", "Acme Attorneys - Sandton", 9.1],
+    ["XRX-B8055-0009", "Xerox AltaLink B8055", "Metro Clinic - Durban", 2.4],
+    ["XRX-B7035-0044", "Xerox VersaLink B7035", "Metro Clinic - Durban", 3.8],
+    ["XRX-C7130-7781", "Xerox VersaLink C7130", "Cape Legal - Cape Town", 6.3],
+    ["XRX-B8145-2200", "Xerox AltaLink B8145", "Cape Legal - Cape Town", 4.2]
+  ];
+  const now = Date.now();
+  for (const [serial, model, site, mean] of base) {
+    for (let d = 20; d >= 0; d--) {
+      if (Math.random() < 0.25) continue;
+      const ts = new Date(now - d * 864e5 - Math.random() * 6e7).toISOString();
+      const cov = Math.max(0.3, +(mean + (Math.random() - 0.5) * 3).toFixed(2));
+      store.record({ device: { serialNumber: serial, model, site }, job: { pages: 1 + Math.floor(Math.random() * 12) }, coverage: { avgTotalAreaCoveragePct: cov }, generatedAt: ts });
+    }
+  }
+  console.log("[seed] demo data inserted");
 }
-app.get("/api/summary", async (_q,res)=>{ try{ res.json(await summarize()); }catch(e){ res.status(500).json({error:e.message}); } });
+seedIfEmpty().catch(e => console.warn("[seed]", e.message));
 
-// Ingest endpoint: the on-site metering proxy posts each job's coverage here.
-app.post("/api/ingest",(req,res)=>{ try{ const b=req.body||{}; record({reportType:"pageCoverage",schemaVersion:"1.0",device:b.device||{},job:b.job||{},coverage:b.coverage||{},generatedAt:new Date().toISOString()}); res.json({ok:true}); }catch(e){ res.status(500).json({error:e.message}); } });
-// Keep-alive: ping own public URL so the free instance does not sleep.
-const SELF_URL=(process.env.SELF_URL||"https://coverage-meter.onrender.com").replace(/\/+$/,"");
-setInterval(()=>{ fetch(SELF_URL+"/healthz").catch(()=>{}); }, 10*60*1000);
+// keep the free instance awake
+const SELF_URL = (process.env.SELF_URL || "https://coverage-meter.onrender.com").replace(/\/+$/, "");
+setInterval(() => { fetch(SELF_URL + "/healthz").catch(() => {}); }, 10 * 60 * 1000);
 
-app.listen(PORT, () => console.log(`Coverage Meter backend on http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`OptiYield Fleet Coverage Monitor on http://localhost:${PORT}`));
