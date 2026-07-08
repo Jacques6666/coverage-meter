@@ -4,32 +4,53 @@
  body{margin:0;font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;background:#f4f5f7}
  .top{background:#fff;border-bottom:3px solid #cc0000;padding:12px 18px}
  .top b{font-size:18px}.top span{color:#6b7280;font-size:12px;display:block}
- .wrap{max-width:940px;margin:0 auto;padding:16px}
- .card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:16px;margin-bottom:12px}
- table{border-collapse:collapse;width:100%;font-size:13px}
- th,td{border-bottom:1px solid #eee;padding:9px 10px;text-align:right}th:first-child,td:first-child{text-align:left}
- th{font-size:11px;text-transform:uppercase;color:#6b7280}
- .pill{font-size:11px;font-weight:bold;padding:2px 9px;border-radius:20px}
+ .wrap{max-width:1000px;margin:0 auto;padding:16px}
+ .bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+ #q{padding:9px 12px;border:1px solid #cbd0d8;border-radius:8px;font-size:14px;width:300px}
+ .mut{color:#6b7280;font-size:12px}
+ .site{background:#fff;border:1px solid #e5e7eb;border-radius:10px;margin-bottom:14px;overflow:hidden}
+ .sh{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-left:6px solid #0a7d34}
+ .site.over .sh{border-left-color:#cc0000;background:#fdf3f3}
+ .sh .name{font-size:15px;font-weight:bold}.sh .meta{font-size:12px;color:#6b7280}
+ .sh .cov{font-size:20px;font-weight:bold}
+ .pill{font-size:11px;font-weight:bold;padding:2px 9px;border-radius:20px;margin-left:8px}
  .pill.over{background:#fdecec;color:#b40000}.pill.under{background:#e7f6ec;color:#0a7d34}
+ table{border-collapse:collapse;width:100%;font-size:13px}
+ th,td{border-top:1px solid #eee;padding:8px 16px;text-align:right}th:first-child,td:first-child{text-align:left}
+ th{font-size:10px;text-transform:uppercase;color:#9aa1ab;background:#fafbfc}
  td.over{color:#b40000;font-weight:bold}td.under{color:#0a7d34;font-weight:bold}
- .mut{color:#6b7280;font-size:12px}a{color:#cc0000}
+ .empty{color:#6b7280;padding:20px;text-align:center}
 </style></head><body>
-<div class="top"><b>Coverage - Billing Dashboard</b><span>Actual page coverage vs contracted rate, per device</span></div>
+<div class="top"><b>Coverage - Billing Dashboard</b><span>Actual page coverage vs contracted rate, by site</span></div>
 <div class="wrap">
- <div class="card"><div class="mut" id="sub">Loading...</div>
-  <table id="tbl"></table></div>
- <div class="mut">Coverage is measured from the actual pixels on each printed page (not the printer's toner estimate). <a href="/">Measurement tool &rarr;</a></div>
+ <div class="bar"><input id="q" placeholder="Search serial or site..."><div class="mut" id="sub">Loading...</div></div>
+ <div id="list"></div>
 </div>
 <script>
-function pctv(x){return (Math.round(x*100)/100).toFixed(2)+'%';}
-var x=new XMLHttpRequest();x.open('GET','/api/summary',true);
-x.onreadystatechange=function(){if(x.readyState===4&&x.status===200){render(JSON.parse(x.responseText));}};
-x.send();
-function render(d){
- document.getElementById('sub').textContent='Contracted coverage: '+d.contractPct+'%  -  '+d.devices.length+' device(s) reporting';
- var t='<tr><th>Printer serial</th><th>Model</th><th>Jobs</th><th>Pages</th><th>Actual coverage</th><th>Contract</th><th>Difference</th><th>Status</th></tr>';
- for(var i=0;i<d.devices.length;i++){var m=d.devices[i];var over=m.avgCoverage>m.contract;var cls=over?'over':'under';
-  t+='<tr><td>'+m.serial+'</td><td>'+(m.model||'')+'</td><td>'+m.jobs+'</td><td>'+m.pages+'</td><td><b>'+pctv(m.avgCoverage)+'</b></td><td>'+pctv(m.contract)+'</td><td class="'+cls+'">'+(m.delta>=0?'+':'')+pctv(m.delta)+'</td><td><span class="pill '+cls+'">'+(over?'Over':'Under')+'</span></td></tr>';}
- document.getElementById('tbl').innerHTML=t;
+function pv(x){return (Math.round(x*100)/100).toFixed(2)+'%';}
+var DATA=null;
+var xhr=new XMLHttpRequest();xhr.open('GET','/api/summary',true);
+xhr.onreadystatechange=function(){if(xhr.readyState===4&&xhr.status===200){DATA=JSON.parse(xhr.responseText);render();}};
+xhr.send();
+document.getElementById('q').oninput=render;
+function render(){
+ if(!DATA)return;
+ var q=(document.getElementById('q').value||'').toLowerCase();
+ var sites=[];
+ for(var i=0;i<DATA.sites.length;i++){var s=DATA.sites[i];
+  var devs=[];for(var j=0;j<s.devices.length;j++){var d=s.devices[j];
+   if(!q||(d.serial+' '+(d.model||'')+' '+s.site).toLowerCase().indexOf(q)>=0)devs.push(d);}
+  if(devs.length>0)sites.push({s:s,devs:devs});}
+ document.getElementById('sub').textContent='Contracted '+DATA.contractPct+'%  -  '+DATA.siteCount+' sites, '+DATA.deviceCount+' devices';
+ var html='';
+ if(sites.length===0){html='<div class="empty">No devices match your search.</div>';}
+ for(var k=0;k<sites.length;k++){var s=sites[k].s,devs=sites[k].devs,over=s.over;
+  html+='<div class="site'+(over?' over':'')+'"><div class="sh"><div><div class="name">'+s.site+'</div><div class="meta">'+s.deviceCount+' devices  -  '+s.pages+' pages</div></div>';
+  html+='<div style="text-align:right"><span class="cov" style="color:'+(over?'#b40000':'#0a7d34')+'">'+pv(s.avgCoverage)+'</span><span class="pill '+(over?'over':'under')+'">'+(over?'OVER':'under')+' '+(s.delta>=0?'+':'')+pv(s.delta)+'</span><div class="meta">site avg vs '+DATA.contractPct+'%</div></div></div>';
+  html+='<table><tr><th>Serial</th><th>Model</th><th>Jobs</th><th>Pages</th><th>Coverage</th><th>Diff</th><th>Status</th></tr>';
+  for(var j=0;j<devs.length;j++){var d=devs[j];var cls=d.over?'over':'under';
+   html+='<tr><td>'+d.serial+'</td><td>'+(d.model||'')+'</td><td>'+d.jobs+'</td><td>'+d.pages+'</td><td><b>'+pv(d.avgCoverage)+'</b></td><td class="'+cls+'">'+(d.delta>=0?'+':'')+pv(d.delta)+'</td><td><span class="pill '+cls+'">'+(d.over?'Over':'Under')+'</span></td></tr>';}
+  html+='</table></div>';}
+ document.getElementById('list').innerHTML=html;
 }
 </script></body></html>
