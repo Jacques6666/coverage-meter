@@ -1,125 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Coverage Meter</title>
 <style>
-  /* Deliberately conservative CSS so it renders on the oldest supported panel. */
-  body{margin:0;font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;background:#f4f5f7}
-  .top{background:#fff;border-bottom:3px solid #cc0000;padding:12px 18px}
-  .top b{font-size:17px}
-  .top span{color:#6b7280;font-size:12px;display:block}
-  .wrap{max-width:760px;margin:0 auto;padding:16px}
-  .card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:16px;margin-bottom:14px}
-  .btn{background:#cc0000;color:#fff;border:0;border-radius:8px;padding:11px 18px;font-size:15px;font-weight:bold;cursor:pointer}
-  .btn[disabled]{opacity:.5}
-  input[type=file]{font-size:14px}
-  label{font-size:12px;color:#6b7280;display:block;margin-bottom:3px}
-  select{padding:7px;border:1px solid #e5e7eb;border-radius:6px;font-size:14px}
-  .row{display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap}
-  .stat{display:inline-block;min-width:120px;margin:6px 14px 6px 0}
-  .stat .k{font-size:11px;color:#6b7280;text-transform:uppercase}
-  .stat .v{font-size:26px;font-weight:bold}
-  .chan{display:flex;align-items:center;gap:10px;margin:7px 0}
-  .chan .n{width:70px;font-size:13px}
-  .chan .t{flex:1;height:15px;background:#eef0f3;border-radius:8px;overflow:hidden}
-  .chan .f{height:100%}
-  .chan .p{width:60px;text-align:right;font-weight:bold;font-size:13px}
-  table{border-collapse:collapse;width:100%;font-size:12px;margin-top:6px}
-  th,td{border-bottom:1px solid #eee;padding:6px 8px;text-align:right}
-  th:first-child,td:first-child{text-align:left}
-  #status{font-size:13px;color:#6b7280;margin-top:8px}
-  .hide{display:none}
+ body{margin:0;font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;background:#f4f5f7}
+ .top{background:#fff;border-bottom:3px solid #cc0000;padding:12px 18px}
+ .top b{font-size:18px}.top span{color:#6b7280;font-size:12px;display:block}
+ .wrap{max-width:820px;margin:0 auto;padding:16px}
+ .card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:16px;margin-bottom:14px}
+ .btn{background:#cc0000;color:#fff;border:0;border-radius:8px;padding:11px 18px;font-size:15px;font-weight:bold;cursor:pointer;margin-left:8px}
+ label{font-size:12px;color:#6b7280;display:block;margin-bottom:3px}
+ select{padding:7px;border:1px solid #e5e7eb;border-radius:6px;font-size:14px}
+ .row{display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap}
+ .stat{display:inline-block;min-width:120px;margin:6px 14px 6px 0}
+ .stat .k{font-size:11px;color:#6b7280;text-transform:uppercase}.stat .v{font-size:26px;font-weight:bold}
+ .chan{display:flex;align-items:center;gap:10px;margin:7px 0}
+ .chan .n{width:70px;font-size:13px}.chan .t{flex:1;height:15px;background:#eef0f3;border-radius:8px;overflow:hidden}
+ .chan .f{height:100%}.chan .p{width:60px;text-align:right;font-weight:bold;font-size:13px}
+ table{border-collapse:collapse;width:100%;font-size:12px;margin-top:6px}
+ th,td{border-bottom:1px solid #eee;padding:6px 8px;text-align:right}th:first-child,td:first-child{text-align:left}
+ #status{font-size:13px;color:#6b7280;margin-top:8px}.hide{display:none}
 </style>
 </head>
 <body>
-  <div class="top"><b>Coverage Meter</b><span>Real-time page coverage · Xerox&reg; VersaLink&reg; / AltaLink&reg;</span></div>
-  <div class="wrap">
-
-    <div class="card">
-      <div class="row">
-        <div>
-          <label>Document to measure</label>
-          <input type="file" id="file" accept="application/pdf,image/png,image/jpeg" />
-        </div>
-        <div>
-          <label>Resolution</label>
-          <select id="dpi"><option>100</option><option selected>150</option><option>200</option></select>
-        </div>
-        <button class="btn" id="go">Analyse &amp; Print</button>
-        <button class="btn" id="sample">Measure sample</button>
-      </div>
-      <div id="status"></div>
-    </div>
-
-    <div class="card hide" id="results">
-      <div id="stats"></div>
-      <h4 style="margin:14px 0 4px;font-size:13px;color:#cc0000">Average toner coverage</h4>
-      <div id="cmyk"></div>
-      <h4 style="margin:14px 0 4px;font-size:13px;color:#cc0000">Per-page</h4>
-      <div style="overflow:auto"><table id="tbl"></table></div>
-    </div>
-
+<div class="top"><b>Coverage Meter</b><span>Real-time page coverage &middot; Xerox&reg; VersaLink&reg; / AltaLink&reg;</span></div>
+<div class="wrap">
+ <div class="card">
+  <div class="row">
+   <div><label>Document to measure</label><input type="file" id="file" accept="application/pdf,image/png,image/jpeg"></div>
+   <div><label>Resolution</label><select id="dpi"><option>100</option><option selected>150</option><option>200</option></select></div>
+   <button class="btn" id="go">Analyse &amp; Print</button>
+   <button class="btn" id="sample">Measure sample</button>
   </div>
+  <div id="status"></div>
+ </div>
+ <div class="card hide" id="results">
+  <div id="stats"></div>
+  <h4 style="margin:14px 0 4px;font-size:13px;color:#cc0000">Average toner coverage</h4>
+  <div id="cmyk"></div>
+  <h4 style="margin:14px 0 4px;font-size:13px;color:#cc0000">Per-page</h4>
+  <div style="overflow:auto"><table id="tbl"></table></div>
+ </div>
+</div>
 <script>
-  var $ = function(id){ return document.getElementById(id); };
-  function pct(x){ return (Math.round(x*100)/100).toFixed(2); }
-
-  $("go").onclick = function(){
-    var f = $("file").files[0];
-    if(!f){ $("status").textContent = "Choose a PDF or image first."; return; }
-    var fd = new FormData();
-    fd.append("file", f);
-    fd.append("dpi", $("dpi").value);
-    fd.append("model", "Xerox AltaLink C8135");   // set from device info in production
-    fd.append("serial", "XRX-TEST-0001");
-    $("go").disabled = true; $("status").textContent = "Measuring coverage on the server…";
-
-    fetch("/api/analyze", { method:"POST", body: fd })
-      .then(function(r){ return r.json(); })
-      .then(function(rep){
-        if(rep.error){ throw new Error(rep.error); }
-        render(rep);
-        // Release to print (dry-run until eip.js is wired to the device).
-        return fetch("/api/release-print", { method:"POST", headers:{"content-type":"application/json"},
-                     body: JSON.stringify({ dryRun:true }) }).then(function(r){return r.json();});
-      })
-      .then(function(rel){
-        $("status").textContent = rel && rel.dryRun
-          ? "Coverage measured & reported. Print step is in dry-run — wire eip.js to the device to release the job."
-          : "Coverage measured, reported, and job released.";
-      })
-      .catch(function(e){ $("status").textContent = "Error: " + e.message; })
-      .then(function(){ $("go").disabled = false; });
-  };
-
-  // Panel-friendly path: measure the server's built-in sample via XHR (works on older EIP browsers).
-  $("sample").onclick = function(){
-    $("status").textContent = "Measuring sample on the server…";
-    var x = new XMLHttpRequest(); x.open("GET","/api/analyze-sample",true);
-    x.onreadystatechange = function(){
-      if(x.readyState===4){
-        if(x.status===200){ try{ render(JSON.parse(x.responseText)); $("status").textContent="Coverage measured (built-in sample page)."; }catch(e){ $("status").textContent="Parse error: "+e.message; } }
-        else { $("status").textContent="Error "+x.status; }
-      }
-    };
-    x.send();
-  };
-
-  function render(rep){
-    $("results").className = "card";
-    var c = rep.coverage;
-    $("stats").innerHTML =
-      stat("Pages", rep.job.pages) +
-      stat("Avg total area", pct(c.avgTotalAreaCoveragePct) + "%") +
-      stat("Ink density", pct(c.avgInkDensityPct) + "%") +
-      stat("Colour / Mono", rep.job.colorPages + " / " + rep.job.monoPages);
-
-    var bars = [["Cyan","#00aeef",c.avgCyanPct],["Magenta","#ec008c",c.avgMagentaPct],
-                ["Yellow","#e6d900",c.avgYellowPct],["Black","#231f20",c.avgBlackPct]];
-    var html = "";
-    for(var i=0;i<bars.length;i++){
-      var w = Math.min(100, bars[i][2]*4);
-      html += '<div class="chan"><div class="n">'+bars[i][0]+'</div>'+
-              '<div class="t"><div class="f" style="width:'+w+'%;backgrou
+function $(id){return document.getElementById(id);}
+function pct(x){return (Math.round(x*100)/100).toFixed(2);}
+function stat(k,v){return '<div class="stat"><div class="k">'+k+'</div><div class="v">'+v+'</div></div>';}
+function render(rep){
+ $("results").className="card";
+ var c=rep.coverage;
+ $("stats").innerHTML=stat("Pages",rep.job.pages)+stat("Avg total area",pct(c.avgTotalAreaCoveragePct)+"%")+stat("Ink density",pct(c.avgInkDensityPct)+"%")+stat("Colour / Mono",rep.job.colorPages+" / "+rep.job.monoPages);
+ var bars=[["Cyan","#00aeef",c.avgCyanPct],["Magenta","#ec008c",c.avgMagentaPct],["Yellow","#e6d900",c.avgYellowPct],["Black","#231f20",c.avgBlackPct]];
+ var html="",i;
+ for(i=0;i<bars.length;i++){var w=Math.min(100,bars[i][2]*4);html+='<div class="chan"><div class="n">'+bars[i][0]+'</div><div class="t"><div class="f" style="width:'+w+'%;background:'+bars[i][1]+'"></div></div><div class="p">'+pct(bars[i][2])+'%</div></div>';}
+ $("cmyk").innerHTML=html;
+ var t="<tr><th>Page</th><th>Type</th><th>C%</th><th>M%</th><th>Y%</th><th>K%</th><th>Total%</th></tr>",j,p;
+ for(j=0;j<rep.pages.length;j++){p=rep.pages[j];t+="<tr><td>"+p.page+"</td><td>"+p.type+"</td><td>"+pct(p.cyanPct)+"</td><td>"+pct(p.magentaPct)+"</td><td>"+pct(p.yellowPct)+"</td><td>"+pct(p.blackPct)+"</td><td><b>"+pct(p.totalAreaPct)+"</b></td></tr>";}
+ $("tbl").innerHTML=t;
+}
+function xhrJson(method,url,form,cb){
+ var x=new XMLHttpRequest();x.open(method,url,true);
+ x.onreadystatechange=function(){if(x.readyState===4){if(x.status===200){try{cb(null,JSON.parse(x.responseText));}catch(e){cb("Bad response");}}else{cb("Error "+x.status);}}};
+ x.send(form||null);
+}
+$("sample").onclick=function(){
+ $("status").textContent="Measuring sample on the server...";
+ xhrJson("GET","/api/analyze-sample",null,function(err,rep){
+  if(err){$("status").textContent=err;return;}
+  render(rep);$("status").textContent="Coverage measured (built-in sample page).";
+ });
+};
+$("go").onclick=function(){
+ var f=$("file").files[0];
+ if(!f){$("status").textContent="Choose a PDF or image first, or tap Measure sample.";return;}
+ var fd=new FormData();fd.append("file",f);fd.append("dpi",$("dpi").value);fd.append("model","Xerox AltaLink C8135");fd.append("serial","panel-test");
+ $("status").textContent="Measuring coverage on the server...";
+ xhrJson("POST","/api/analyze",fd,function(err,rep){
+  if(err){$("status").textContent=err;return;}
+  render(rep);$("status").textContent="Coverage measured. (Print release is a later step.)";
+ });
+};
+</script>
+</body>
+</html>
