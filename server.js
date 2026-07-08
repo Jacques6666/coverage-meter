@@ -6,7 +6,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { rasterize } from "./rasterize.js";
 import { analyzePixels, classify, buildReport } from "./coverage.js";
-import { record, recent } from "./telemetry.js";
+import { record, recent, recentDb } from "./telemetry.js";
 import { releaseToPrint } from "./eip.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -68,8 +68,8 @@ const SEED = [
   {device:{serialNumber:"XRX-B8055-0009",model:"Xerox AltaLink B8055",site:"Metro Clinic - Durban"},job:{pages:120},coverage:{avgTotalAreaCoveragePct:2.4}},
   {device:{serialNumber:"XRX-B7035-0044",model:"Xerox VersaLink B7035",site:"Metro Clinic - Durban"},job:{pages:80},coverage:{avgTotalAreaCoveragePct:3.8}}
 ];
-function summarize(){
-  let recs; try { recs = recent(3000); } catch(e){ recs = []; }
+async function summarize(){
+  let recs; try { recs = await recentDb(3000); } catch(e){ recs = []; }
   const all = SEED.concat(recs); const dmap = {};
   all.forEach(r=>{
     const s=(r.device&&r.device.serialNumber)||"unknown";
@@ -89,6 +89,12 @@ function summarize(){
   sites.sort((a,b)=>b.avgCoverage-a.avgCoverage);
   return {contractPct:CONTRACT_PCT, siteCount:sites.length, deviceCount:devices.length, sites:sites};
 }
-app.get("/api/summary",(_q,res)=>{ try{ res.json(summarize()); }catch(e){ res.status(500).json({error:e.message}); } });
+app.get("/api/summary", async (_q,res)=>{ try{ res.json(await summarize()); }catch(e){ res.status(500).json({error:e.message}); } });
+
+// Ingest endpoint: the on-site metering proxy posts each job's coverage here.
+app.post("/api/ingest",(req,res)=>{ try{ const b=req.body||{}; record({reportType:"pageCoverage",schemaVersion:"1.0",device:b.device||{},job:b.job||{},coverage:b.coverage||{},generatedAt:new Date().toISOString()}); res.json({ok:true}); }catch(e){ res.status(500).json({error:e.message}); } });
+// Keep-alive: ping own public URL so the free instance does not sleep.
+const SELF_URL=(process.env.SELF_URL||"https://coverage-meter.onrender.com").replace(/\/+$/,"");
+setInterval(()=>{ fetch(SELF_URL+"/healthz").catch(()=>{}); }, 10*60*1000);
 
 app.listen(PORT, () => console.log(`Coverage Meter backend on http://localhost:${PORT}`));
