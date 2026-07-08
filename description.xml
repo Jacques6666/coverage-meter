@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<displayText>
+  <label>Coverage Meter</label>
+  <description>Real-time page coverage</description>
+  <vendor>Altron</vendor>
+  <browserType>secondGenEIPBrowser</browserType>
+</displayText>

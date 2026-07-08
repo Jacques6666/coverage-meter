@@ -1,0 +1,15 @@
+{
+  "name": "coverage-meter-connectkey",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "server.js",
+  "scripts": { "start": "node server.js", "selftest": "node test/selftest.mjs" },
+  "engines": { "node": ">=18" },
+  "dependencies": {
+    "express": "^4.19.2",
+    "multer": "^2.0.0",
+    "pngjs": "^7.0.0",
+    "jpeg-js": "^0.4.4"
+  }
+}
