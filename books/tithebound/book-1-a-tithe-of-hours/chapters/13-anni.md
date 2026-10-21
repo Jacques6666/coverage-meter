@@ -230,7 +230,7 @@ I looked down at the table.
 
 "No."
 
-He let out a breath.
+He breathed out, slowly.
 
 "Then why?" he said. "Why'd he say *all night*? He could have said till the sluice. That's all Marr asked. He made it worse. He made it so much worse, on purpose, in front of Lysander—"
 

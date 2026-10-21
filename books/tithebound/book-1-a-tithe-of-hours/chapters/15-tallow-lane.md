@@ -112,7 +112,7 @@ A beat. Slow. Very slow, slower than any heart I'd ever heard. A long, deep thro
 
 "Something's breathing."
 
-"It's the river." He said it very evenly. "The weight of it, on the stone. It makes the tunnel settle. You get used to it."
+"It's the river." He said it very evenly. "All that water pressing on the stone. It makes the tunnel settle. You get used to it."
 
 I looked at him. He was looking at the gate. Not at me.
 
