@@ -92,7 +92,7 @@ Choose the closest matches KDP offers to:
 3. **Kindle eBook Content:**
    - Manuscript: upload the `.epub`.
    - Cover: choose "Upload a cover you already have" and upload `cover.jpg`.
-   - AI-generated content: answer **Yes** for text. Say **No** for the cover images, because the cover is type and a drawn clock, made without an AI image generator.
+   - AI-generated content: answer **Yes** for text, and **Yes** for images too. The cover was designed by AI (written as code, not with an image generator), and saying yes is the safe answer.
    - Click **Launch Previewer** and page through a few chapters, the contents list and the last page.
    - Click **Save and Continue**.
 4. **Kindle eBook Pricing:** enroll in KDP Select, choose all territories and the 70% royalty, and set $3.99 (or $0.99 for launch week). Click **Publish Your Kindle eBook**.
