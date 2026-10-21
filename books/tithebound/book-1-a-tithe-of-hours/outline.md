@@ -160,3 +160,16 @@ In the Wick, with four years left, Severin walks into Mother Gannet's back room,
 | Gilt-style knot on Joss's cut thread | Ch. 5 | Ch. 26 (Lysander's knot) |
 | Stain on Severin's glove | Ch. 5 | Ch. 12 (his own blood: he cut his hand on the cistern grate searching for Joss before the alarm) |
 | The tether flows the "wrong way" | Ch. 11 | Ch. 12 (he burns his own count) |
+
+---
+
+## Changes made while drafting
+
+The chapters are the source of truth. Main differences from the plan above:
+- **Ch. 13:** Anni is found on the sluice grate, not in the Gallery of Hours. The killer stilled the whole Tithe Hall to take her. Severin is found in the water holding her body, and *he* needs the alibi; he backs Tam's account in front of Marr and Lysander.
+- **Ch. 19:** Tam refuses to run because running would confirm her to Aurelia and send her straight to Kit on Tallow Lane.
+- **Ch. 20–21:** The list in Severin's handwriting is his copy of Aurelia's own lists. He bought Tam because she was on this year's list with Joss and Anni, and he could only buy one. Aurelia already knew about Orrin. Her real offer: at the Reckoning Severin draws all of Tam's count; if it falls, he gets the Ledger; if not, Tam is hers.
+- **Ch. 23–24:** Bry was bait. Aurelia was in the room and said "Not yet. At the Reckoning. In front of everyone." Two weeks pass for Bry's recovery before the Reckoning.
+- **Ch. 25:** Group plan in the clock room with Vadra, Hollis, Bry and Pell. Tam stops inking for good.
+- **Ch. 27–28:** Tam walks onto the Dial with her real count showing. Vadra casts the Echo large under Statute 91. Aurelia turns "Never again the well" against Tam.
+- **Ch. 29:** Aurelia burns three years from Severin (seven down to four).

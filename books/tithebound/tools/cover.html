@@ -1,0 +1,180 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: "Cinzel"; src: url("{{FONTDIR}}/Cinzel-normal-500.woff2") format("woff2"); font-weight: 400 900; }
+  @font-face { font-family: "Cormorant"; src: url("{{FONTDIR}}/CormorantGaramond-italic-500.woff2") format("woff2"); font-style: italic; font-weight: 300 700; }
+
+  :root {
+    --gold: #d6b264;
+    --gold-hi: #f1d892;
+    --ivory: #f5ead0;
+    --silver: #dfe7f2;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1600px; height: 2560px; overflow: hidden; }
+  body {
+    position: relative;
+    background:
+      radial-gradient(ellipse 900px 820px at 50% 37%, rgba(214,178,100,0.20), rgba(214,178,100,0.05) 55%, transparent 75%),
+      radial-gradient(ellipse 1400px 1100px at 50% 105%, rgba(70,90,140,0.22), transparent 70%),
+      linear-gradient(180deg, #0a0d15 0%, #0d1220 45%, #080a11 100%);
+    color: var(--ivory);
+    font-family: "Cinzel", serif;
+  }
+  .grain { position: absolute; inset: 0; opacity: 0.22; mix-blend-mode: overlay; }
+  .vignette { position: absolute; inset: 0; background: radial-gradient(ellipse 1050px 1500px at 50% 48%, transparent 55%, rgba(0,0,0,0.65) 100%); }
+
+  .series {
+    position: absolute; top: 118px; width: 100%; text-align: center;
+    font-size: 44px; letter-spacing: 0.42em; color: var(--gold); font-weight: 500;
+    text-indent: 0.42em;
+  }
+  .series .dot { display: inline-block; margin: 0 0.25em; color: var(--gold-hi); }
+
+  svg.clock { position: absolute; left: 140px; top: 240px; width: 1320px; height: 1320px; overflow: visible; }
+
+  .title {
+    position: absolute; top: 1555px; width: 100%; text-align: center;
+    color: var(--ivory);
+    text-shadow: 0 0 34px rgba(241,216,146,0.45), 0 0 4px rgba(241,216,146,0.6), 0 6px 22px rgba(0,0,0,0.9);
+  }
+  .title .big {
+    display: block; font-size: 238px; line-height: 0.98; font-weight: 700;
+    letter-spacing: 0.07em; text-indent: 0.07em;
+    color: #f6e7bf;
+  }
+  .title .of {
+    display: block; font-family: "Cormorant", serif; font-style: italic; font-weight: 600;
+    font-size: 132px; line-height: 0.9; color: var(--gold-hi); margin: 6px 0 2px;
+  }
+  .rule {
+    position: absolute; top: 2215px; left: 50%; transform: translateX(-50%);
+    width: 520px; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .tagline {
+    position: absolute; top: 2245px; width: 100%; text-align: center;
+    font-family: "Cormorant", serif; font-style: italic; font-weight: 500;
+    font-size: 62px; color: #e9dcbc; letter-spacing: 0.01em;
+  }
+  .author {
+    position: absolute; top: 2390px; width: 100%; text-align: center;
+    font-size: 84px; letter-spacing: 0.24em; text-indent: 0.24em; font-weight: 500;
+    color: var(--ivory);
+    text-shadow: 0 0 30px rgba(241,216,146,0.25);
+  }
+</style>
+</head>
+<body>
+  <svg class="grain" width="1600" height="2560">
+    <filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+    <rect width="100%" height="100%" filter="url(#n)"/>
+  </svg>
+
+  <div class="series">The Tithebound<span class="dot">◆</span>Book One</div>
+
+  <svg class="clock" viewBox="0 0 1000 1000" id="clock">
+    <defs>
+      <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="6" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="softglow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="14"/>
+      </filter>
+      <radialGradient id="face" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#1a2133" stop-opacity="0.85"/>
+        <stop offset="70%" stop-color="#0f1422" stop-opacity="0.75"/>
+        <stop offset="100%" stop-color="#0a0d16" stop-opacity="0.2"/>
+      </radialGradient>
+      <linearGradient id="goldgrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#f6e2a8"/>
+        <stop offset="100%" stop-color="#b98f43"/>
+      </linearGradient>
+    </defs>
+    <g id="dial"></g>
+  </svg>
+
+  <div class="title">
+    <span class="big">A TITHE</span>
+    <span class="of">of</span>
+    <span class="big">HOURS</span>
+  </div>
+  <div class="rule"></div>
+  <div class="tagline">Every spell costs a life. Hers never runs out.</div>
+  <div class="author">{{AUTHOR}}</div>
+
+  <div class="vignette"></div>
+
+<script>
+  const NS = "http://www.w3.org/2000/svg";
+  const g = document.getElementById("dial");
+  const C = 500;
+  function el(name, attrs, parent = g) {
+    const e = document.createElementNS(NS, name);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    parent.appendChild(e);
+    return e;
+  }
+  const gold = "url(#goldgrad)";
+
+  // Face and rings
+  el("circle", { cx: C, cy: C, r: 486, fill: "url(#face)" });
+  el("circle", { cx: C, cy: C, r: 486, fill: "none", stroke: "#d6b264", "stroke-width": 5, filter: "url(#glow)" });
+  el("circle", { cx: C, cy: C, r: 468, fill: "none", stroke: "#d6b264", "stroke-width": 1.6, opacity: 0.8 });
+  el("circle", { cx: C, cy: C, r: 352, fill: "none", stroke: "#d6b264", "stroke-width": 1.2, opacity: 0.45 });
+  el("circle", { cx: C, cy: C, r: 300, fill: "none", stroke: "#d6b264", "stroke-width": 0.8, opacity: 0.25, "stroke-dasharray": "2 9" });
+
+  // Minute and hour ticks
+  for (let i = 0; i < 60; i++) {
+    const a = (i * 6) * Math.PI / 180;
+    const hour = i % 5 === 0;
+    const r1 = 468, r2 = hour ? 428 : 452;
+    el("line", {
+      x1: C + r1 * Math.sin(a), y1: C - r1 * Math.cos(a),
+      x2: C + r2 * Math.sin(a), y2: C - r2 * Math.cos(a),
+      stroke: "#d6b264", "stroke-width": hour ? 5 : 1.6, opacity: hour ? 0.95 : 0.7,
+    });
+  }
+
+  // Roman numerals
+  const numerals = ["XII","I","II","III","IV","V","VI","VII","VIII","IX","X","XI"];
+  numerals.forEach((n, i) => {
+    const a = (i * 30) * Math.PI / 180;
+    const r = 372;
+    const t = el("text", {
+      x: C + r * Math.sin(a), y: C - r * Math.cos(a),
+      "text-anchor": "middle", "dominant-baseline": "central",
+      "font-family": "Cinzel", "font-size": i === 11 ? 62 : 52, "font-weight": 600,
+      fill: i === 11 ? "#f6e2a8" : "#d6b264", opacity: i === 11 ? 1 : 0.88,
+      filter: i === 11 ? "url(#glow)" : "",
+    });
+    t.textContent = n;
+  });
+
+  // Silver thread: drawn from below-left, tied at the hub
+  const threadPath = "M -120 1180 C 120 1010, 210 860, 300 760 S 430 560, 500 500";
+  el("path", { d: threadPath, fill: "none", stroke: "#dfe7f2", "stroke-width": 10, opacity: 0.35, filter: "url(#softglow)" });
+  el("path", { d: threadPath, fill: "none", stroke: "#eef3fa", "stroke-width": 2.6, opacity: 0.95, filter: "url(#glow)" });
+  // a cut end, trailing away up-right
+  const cutPath = "M 500 500 C 560 450, 640 430, 720 400 S 860 330, 905 260";
+  el("path", { d: cutPath, fill: "none", stroke: "#eef3fa", "stroke-width": 2.2, opacity: 0.55, "stroke-dasharray": "220 18 40 14 18 12 6 30" });
+
+  // The single hand, pointing at XI (rotated -30 degrees from twelve)
+  const hand = el("g", { transform: `rotate(-30 ${C} ${C})`, filter: "url(#glow)" });
+  el("path", {
+    d: `M ${C} ${C + 70} L ${C + 9} ${C} L ${C + 4} ${C - 230} L ${C + 20} ${C - 262} L ${C} ${C - 336} L ${C - 20} ${C - 262} L ${C - 4} ${C - 230} L ${C - 9} ${C} Z`,
+    fill: gold, stroke: "#7d5d26", "stroke-width": 1.2,
+  }, hand);
+  el("circle", { cx: C, cy: C - 205, r: 17, fill: "none", stroke: "url(#goldgrad)", "stroke-width": 4 }, hand);
+  el("circle", { cx: C, cy: C + 52, r: 13, fill: "url(#goldgrad)" }, hand);
+
+  // Hub
+  el("circle", { cx: C, cy: C, r: 30, fill: "url(#goldgrad)", filter: "url(#glow)" });
+  el("circle", { cx: C, cy: C, r: 11, fill: "#0c101b" });
+
+</script>
+</body>
+</html>

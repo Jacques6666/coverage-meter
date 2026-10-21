@@ -227,10 +227,40 @@ Maren, a hidden wellspring, secretly tethered her daughter at birth with an old 
 | Tam's true count | 71y 4m (frozen) | 71y 4m (now tethered to Aurelia as well) |
 | Tam's inked count | 61y → falls as Severin casts | Exposed in Ch. 28 |
 | Kit | 1y → 31y after the Grace | 31y |
-| Severin | 9y | 4y |
-| Hollis | 6y 2m | ~6y (spent 1 month on the Echo) |
-| Bry | 58y | ~20y |
+| Severin | 9y | 4y 2m (7y 2m after the Long Night; Aurelia burns 3 in Ch. 29) |
+| Hollis | 6y 2m | ~6y (about 6 weeks on the Echo, 1 week on the primrose) |
+| Bry | 58y | 18y 2m (drained to 2 weeks, given 20 by Tam, Lysander takes 2 at the Reckoning) |
 | Joss | 66y | dead (Ch. 4–5) |
 | Anni | 63y | dead (Ch. 13) |
 | Lysander | unknown (long) | dead (Ch. 28) |
 | Tam's ink supply | almost out (Ch. 1) | restocked in Ch. 8, gone by Ch. 28 |
+
+---
+
+## 9. Book 1 as written: facts Book 2 must honor
+
+These came out of drafting and override anything above that disagrees.
+
+**Calendar.** Months of the Meridian year: Harvestmonth, Leaffall, Mistmonth, Frostmonth (ends with the Long Night at midwinter), Deepwinter, Thaw. The Reckoning falls about three weeks after the Long Night. Wick people still say "February" for late winter.
+
+**Geography.** The Gilt Road runs from the Hours Bridge straight up through the Wick to the terraces. The Thane passage: a hidden door in the tower stair, a spiral down, a Founders' brick tunnel under the Sallow to a derelict chandlery cellar near Broker's Row (Gannet's people use it). Halfway along, an old arch with an iron gate and chain leads down to the Undercroft; Severin could not break it. The cisterns are reached through the barred door at the end of the Tithe Hall (73 steps); across them, an iron door worked with clock faces opens onto the Undercroft passage, the small square room with wall rings, and a deeper passage carved with clock faces ending at the solid silver door. The Keeper's own stair (red carpet, clock-hand sconces) runs from a hidden door at the base of the Horologe to the same passage. Beyond the silver door: the round chamber, the pendulum, Maren.
+
+**How Book 1 ends.**
+- Tam is threaded to Aurelia with a Ledger thread. She also carries Severin's thread and the black thread to Bry (never cut). Her mother's tether is invisible.
+- Maren can speak to Tam inside her head through the mother's tether. Her last words: "Wait for him."
+- The Horologe's hand moved to one minute past eleven; the pendulum swung once. Every bell in Lanthorn rang.
+- Liesl's watch, stopped at 4:20 for five years, started ticking at that moment. Kit's tin watch stopped for exactly one minute and then restarted.
+- Lysander is dead, drained by Aurelia on the Dial. Aurelia publicly framed him for the murders and claimed Tam under the Founders' law ("Never again the well"). The Gilt cheered her.
+- Severin (4y 2m) is with the Unwound at Gannet's, with Vadra, Hollis, Bry, Pell, and Kit, who has drawn the way to the chamber. Captain Marr quietly let him go and pointed him there.
+
+**Lore established.**
+- Wells run in families, mothers to daughters ("a well only shows when something is taken from it"). Kit may be one; nobody has tested it.
+- The previous chained well lasted 140 years and died eleven years before Book 1. Aurelia found Maren the next year through a broker who saw her sell the same three years twice. Maren sold where she shouldn't have, knew they were coming, and tethered Tam the night she left.
+- Silver threads run from Maren up into the clockworks and sideways through the walls (where to: Book 2).
+- Broker Seven = the Ledger buying for itself. Statute 91 (the right of Echo) exists.
+- Echoes are silent. A blank echo-lens can hold one and replay it, large, if a caster pays.
+- A wright holding someone's hand on a thread can draw *through* them. A tithe can push time *up* a thread to a wright (Tam is the first known to do it).
+
+**Characters added while drafting.** Wat Sorrel (Bry's cousin, copy-boy in the Ledger annex). Fitch Ostrander (Joss's gentle wright). Hetty Brannock (Joss's girl, Saltmarket). Mrs. Achterberg (across the landing on Tallow Lane). Tobias Wren (chandler below the Fenns). Pruett (broker, Broker's Row). Corrie (Vey tithe). Aurel Vey (Vadra's late husband, her wright). Celandine Penhallow (Hollis's aunt, died Year 275; Tam wore her dress). Orrin Fisk lives in Calder Bay with Marta and baby Wren. Severin stilled his heart for a day and a half to fake his death (cost: four years). Lord Featherstonehaugh (Hollis's stuffed owl).
+
+**Allies now in place.** Steward Rook (knows about Orrin and covers for them). Captain Marr ("I'm sorry, counter"). Magister Vadra and Mother Gannet (Unwound). Severin's man from the room over the pie shop.

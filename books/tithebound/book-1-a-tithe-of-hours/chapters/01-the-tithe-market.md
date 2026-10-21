@@ -26,7 +26,7 @@ Here is the thing I had never told anyone, not Bry Kettle, not Mother Gannet, no
 
 It doesn't tick down on my birthday. It doesn't go dark when I'm sick. Two winters ago, when Kit's lungs filled up and the physic in Saltmarket wanted silver we didn't have, I walked into a broker's shop under someone else's name and sold three years. I watched them drain out of my arm like water from a cracked cup. I went home and was sick in the yard. In the morning the three years were back. Every line.
 
-I have sold fourteen years since then, a few at a time, in four districts, under six names. I've had every one of them back by breakfast.
+I have sold eleven more years since then, a few at a time, in four districts, under six names. I've had every one of them back by breakfast.
 
 I don't know what I am. I know exactly what they would do to me if they found out.
 

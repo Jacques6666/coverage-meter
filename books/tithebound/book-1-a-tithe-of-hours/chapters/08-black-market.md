@@ -126,7 +126,7 @@ He grunted, and took my wrist, and set his needle against the top of my count, t
 
 A broker's needle is slow. That's the difference between a broker and a working. Pruett didn't have to cast anything; he just let it bleed, the way you'd let sap out of a tree, and caught it in a little glass vial on a silver chain that hung from the needle's end. It took a quarter of an hour. I stood there with my arm on his counter and watched the top line of my count go out. Brown at the ends first. Then grey. Then dark. And the vial at the end of the needle filled with a thin gold light, like honey with the sun behind it, until it glowed.
 
-It's the worst feeling in the world. I've done it fifteen times now and it never gets better. It isn't pain, exactly. It's loss. A year of my life, a whole year, mornings and suppers and winters and whatever I would have said to whoever I would have been, going into a little glass bottle on a broker's counter so that some lord in the Gilt could have one more year of being two hundred.
+It's the worst feeling in the world. I've done it a dozen times now and it never gets better. It isn't pain, exactly. It's loss. A year of my life, a whole year, mornings and suppers and winters and whatever I would have said to whoever I would have been, going into a little glass bottle on a broker's counter so that some lord in the Gilt could have one more year of being two hundred.
 
 I always throw up after. I didn't, that night. I didn't have time.
 

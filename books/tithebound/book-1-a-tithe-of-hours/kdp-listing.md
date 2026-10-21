@@ -80,3 +80,20 @@ Choose the closest matches KDP offers to:
 2. Release Book 2 four to six weeks after Book 1.
 3. Put a link to Book 2 and a one-paragraph teaser on the last page of Book 1.
 4. Use the 5 free promotion days that KDP Select allows each 90 days on Book 1, once Books 2 and 3 are out.
+
+---
+
+## Upload, step by step (about 20 minutes)
+
+**Files:** `dist/book-1-a-tithe-of-hours.epub` (manuscript) and `dist/cover.jpg` (cover, 1600 × 2560). Rebuild both with your pen name first. The current ones say "Pen Name".
+
+1. Go to kdp.amazon.com, sign in, and choose **+ Create → Kindle eBook**.
+2. **Kindle eBook Details:** fill in language, title, series (The Tithebound, #1), author (your pen name), the description above, publishing rights, keywords and categories. Leave pre-order off. Click **Save and Continue**.
+3. **Kindle eBook Content:**
+   - Manuscript: upload the `.epub`.
+   - Cover: choose "Upload a cover you already have" and upload `cover.jpg`.
+   - AI-generated content: answer **Yes** for text. Say **No** for the cover images, because the cover is type and a drawn clock, made without an AI image generator.
+   - Click **Launch Previewer** and page through a few chapters, the contents list and the last page.
+   - Click **Save and Continue**.
+4. **Kindle eBook Pricing:** enroll in KDP Select, choose all territories and the 70% royalty, and set $3.99 (or $0.99 for launch week). Click **Publish Your Kindle eBook**.
+5. Amazon reviews it, which usually takes a few hours and can take up to 72. You'll get an email when it's live.
