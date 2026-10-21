@@ -98,7 +98,7 @@ Below the tower, down in the rock where nobody could see, he'd drawn a small cir
 
 "Where the clock keeps its heart." He said it as if it were obvious. "Mama said."
 
-And I remembered. I hadn't thought of it in years. Our mother sitting on the end of my bed with the lamp turned low, tracing the shape of a clock in the air with one finger, the little finger on that hand bent crooked from some old break she never explained. *The clock has a heart, Tamsin, way down in the dark. And it's always hungry.*
+And I remembered. I hadn't thought of it in years. Our mother sitting on the end of my bed with the lamp turned low, tracing the shape of a clock in the air with one finger, the little finger on that hand bent crooked from some old break she never explained. *The clock has a heart, Tamsin, way down in the dark. And it's always hungry. Promise me you'll never go looking for it. Never.*
 
 I had been six or seven. It had frightened me so badly I'd slept with my head under the blanket for a week. I didn't know I'd ever told Kit.
 
