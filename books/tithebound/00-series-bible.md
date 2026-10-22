@@ -264,3 +264,13 @@ These came out of drafting and override anything above that disagrees.
 **Characters added while drafting.** Wat Sorrel (Bry's cousin, copy-boy in the Ledger annex). Fitch Ostrander (Joss's gentle wright). Hetty Brannock (Joss's girl, Saltmarket). Mrs. Achterberg (across the landing on Tallow Lane). Tobias Wren (chandler below the Fenns). Pruett (broker, Broker's Row). Corrie (Vey tithe). Aurel Vey (Vadra's late husband, her wright). Celandine Penhallow (Hollis's aunt, died Year 275; Tam wore her dress). Orrin Fisk lives in Calder Bay with Marta and baby Wren. Severin stilled his heart for a day and a half to fake his death (cost: four years). Lord Featherstonehaugh (Hollis's stuffed owl).
 
 **Allies now in place.** Steward Rook (knows about Orrin and covers for them). Captain Marr ("I'm sorry, counter"). Magister Vadra and Mother Gannet (Unwound). Severin's man from the room over the pie shop.
+
+---
+
+## 10. Series arc, revised before Book 2
+
+The Book 2 outline (`book-2-a-debt-of-years/outline.md`) sets the clock's full rules: the Stay, the Keeper's Knot, the Renewal, the Lines, slips, thread-speech, and the Settlement at midnight. The later books now run like this:
+
+- **Book 2, A Debt of Years:** Maren is freed. Lotte Varga dies cutting the Stay. The hand walks a minute a day toward twelve and debts of years drain home. Last line: Kit's count is getting shorter, because his Grace is *given* years.
+- **Book 3, A Vault of Seconds:** the 54-day countdown. Midnight would save the Wick and Hollis and give Bry back her stolen years. It would kill the Long-Lived, Rook and Vadra, take Kit's Grace, and take back every year Tam ever gave Severin. The city and the friends split over whether to let it strike. Aurelia and Ismay Lisle want a new well chained under the clock to stop it, and they expect Tam to volunteer for the people she loves. Ending as planned: Maren dies stabilizing the clock in her daughter's place, and Tam's finger crooks as she wakes as a true well.
+- **Books 4 and 5** stand as planned: the war, Severin taking House Thane, the apparent betrayal, and the final unbinding, where counts return to natural lives for everyone, Severin's burned years are restored, and Hollis lives.
