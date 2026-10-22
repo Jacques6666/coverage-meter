@@ -274,3 +274,64 @@ The Book 2 outline (`book-2-a-debt-of-years/outline.md`) sets the clock's full r
 - **Book 2, A Debt of Years:** Maren is freed. Lotte Varga dies cutting the Stay. The hand walks a minute a day toward twelve and debts of years drain home. Last line: Kit's count is getting shorter, because his Grace is *given* years.
 - **Book 3, A Vault of Seconds:** the 54-day countdown. Midnight would save the Wick and Hollis and give Bry back her stolen years. It would kill the Long-Lived, Rook and Vadra, take Kit's Grace, and take back every year Tam ever gave Severin. The city and the friends split over whether to let it strike. Aurelia and Ismay Lisle want a new well chained under the clock to stop it, and they expect Tam to volunteer for the people she loves. Ending as planned: Maren dies stabilizing the clock in her daughter's place, and Tam's finger crooks as she wakes as a true well.
 - **Books 4 and 5** stand as planned: the war, Severin taking House Thane, the apparent betrayal, and the final unbinding, where counts return to natural lives for everyone, Severin's burned years are restored, and Hollis lives.
+
+---
+
+## 11. Book 2 as written: facts Book 3 must honor
+
+These came out of drafting Book 2 and override anything above that disagrees.
+
+**Timeline.** Book 2 runs from six days after the Reckoning to the evening of the third day after the Renewal. Lotte cut the Stay at dawn on the Turning of the Year. The hand moves one minute each dawn and every bell in Lanthorn rings when it does. **Book 2 ends at 11:06, fifty-four days to midnight**, on the evening of the third day after the cut.
+
+**How the walk to midnight shows.**
+- A sixtieth part of every moved year goes home for each minute the hand walks; the rest goes at midnight.
+- Years going home rise off the holder's arm as a faint gold smoke, steady day and night. Over the Gilt it hangs as a gold haze. They come in at the *top* of the receiver's ladder as faint new lines that brighten over a day or so.
+- Given years whose giver is joined to the holder by a thread go back down the thread, with no smoke. Severin's arm doesn't smoke. Tam's silver and black threads have felt warm ever since the cut, and she thinks it means everyone is finally safe.
+- Bry's count still rises overall: her 56 stolen years coming home outweigh the years Tam gave her going back down the thread.
+- Kit's Grace went in through a Ledger needle, with no thread to the giver, so his arm smokes. He hides it under his sleeve out of old habit and only notices on the book's last page.
+- Nobody will buy years now. Pruett's sign reads ONE PENNY THE YEAR.
+- Someone chalks the days left on the wall at the bottom of Tallow Lane each dawn (56, 55, 54). Kit wants to be the one who does it.
+
+**Where everyone stands at the end.**
+- **Maren:** freed and home on Tallow Lane, in Tam's old bed under the window that sticks. Very weak, light as a bird, arms still glowing but dimmer. She says the well in her is "a pond, where there was a river." She measured Tam on the door frame: *T 19*, ten years above *T 9*.
+- **Tam:** 71y 4m (unchanged). Severin cut her Ledger thread to Aurelia in the slack. She still carries his silver thread, Bry's black thread and her mother's tether. She doesn't know what page eleven says yet.
+- **Kit:** losing about half a year a day. At midnight he'd keep only his own, about a year. Last line: *"Tam? My count's getting shorter."* Severin carried Kit's tin watch down the shaft and hasn't given it back on the page.
+- **Severin:** about 12 years, most of them given by Tam. At midnight those go back to her and he keeps only what's left of his own ("It didn't come to very much"). He carries page eleven, Liesl's watch (Lotte's last gift, still ticking) and Lotte's knife, and wears Aldric's ring (*A.T. — Every Thane needs a way out*) on his left hand. His right hand is splinted. He has reconciled with his mother. He came to Tallow Lane to tell Tam everything so they could decide together, and Kit walked in before he could.
+- **The Charter:** left on the velvet table in Severin's tower room. Page eleven is with Severin.
+- **Lotte Varga:** dead, paid in full for the cut. The laundresses gave her to the river, and the whole Wick held up bare, thread-scarred wrists. Her last word: "Sev."
+- **Evadne Thane:** reconciled with her son, walking on his arm. Still afraid of the dark.
+- **Hollis:** count rising (8y 4m by Ch. 30) as the racehorse years come home to the seller's blood. He has cancelled the portrait painter. Engaged to **Ambrose Vey** (40 years, poet, tall, Vey green), who keeps his cuffs buttoned. Is Ambrose's count shrinking? Unconfirmed: a Book 3 thread.
+- **Bry:** about 20 years and rising. Close with Pell (he's teaching her to bake; she's teaching him to punch).
+- **Pell:** 41, with his 8 stolen years coming home. He baked the midnight cake, with the clock in currants and the hand at twelve.
+- **Rook:** has lived 31 years past her own count on Meridian-paid years, and her arm smokes. She'll die at midnight and says she'll go gladly.
+- **Vadra:** lives on years Aurel Vey gave her. She hid page eleven so nobody would have to choose. She'll die at midnight.
+- **Nessa's sister Pip** (7, born with 3 years, 5 years of Thane Grace): her Grace is given years too. An open thread.
+- **Durrow:** arrested by Marr for the murders of eleven tithes and the abduction of a child. He will hang.
+- **Marr:** has suspended the Ledger "until further notice". His men bricked up the chamber end of the Lisle tunnel.
+- **The Long-Lived:**
+  - Lord Alder Ostrander died in the round room, and Fitch held his hand.
+  - Corisande Marchbank's arm is nearly dark.
+  - Half the Inner Ledger have shut themselves in with the curtains drawn. The other half are packing for Calder Bay and the islands.
+  - Fitch Ostrander sent honey to Tallow Lane, with no note.
+- **Aurelia:** fled through her silver door, smoking. She's hiding with Ismay Lisle in a Founders' room under Lisle House: a round vault with seven black stone chairs, one per House. She was born with 60 years. Her blaze now stops at the shoulder instead of the collarbone, and she counts the city's ordinary midnight bells every night.
+  - **Her plan:** let Tam see Kit's arm and do the sum, then take Tam *willing* under the clock and tie a new Stay.
+  - **Her mistake:** she believes Maren is spent ("You can't tie a Stay to a pond").
+  - Four candied violets left; she eats one on the last page.
+- **Ismay Lisle (190):** her arm smokes too. Her grandson **Corwin** is gathering the frightened Long-Lived. She and Aurelia haven't settled whose hand ties the knot.
+- **Orrin** has gone to find a boat home to Calder Bay. **Gannet's** shop burned; the Unwound now meet in the derelict chandlery with the trapdoor to the Thane tunnel.
+- **Open threads:** Magpie (the thief girl), Corran (Aurelia's guard, whom Tam bit; missing since the cellar rescue), and the Founders' relics in the Ledger House vault: a silver comb, a short sword and a pair of black-bladed shears.
+
+**Added while drafting Book 2.**
+- Lotte Varga (laundress, Liesl's mother).
+- Abel (dock porter who helped Lotte cut threads).
+- Hob (Unwound, burnt arm).
+- Magpie (thief girl).
+- Nessa (Tam's maid) and her sister Pip.
+- Corran (guard).
+- Evadne Thane (Severin's mother).
+- Aldric Thane (his father, drained when Severin was seven).
+- Tobiah Fenn (Tam's father, lamplighter on the Hours Bridge, drowned on the ice when she was three).
+- Hanne Achterberg (widow, across the landing).
+- Corwin Lisle (Ismay's grandson).
+- Ambrose Vey (Vadra's late husband's sister's son).
+- The Wick lullaby before the Drowning: *"Everyone goes home at midnight"* (Book 2's epigraph).

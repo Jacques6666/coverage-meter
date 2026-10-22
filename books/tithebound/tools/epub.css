@@ -47,3 +47,15 @@ h1 .chaptitle {
 .epigraph p { text-align: center; margin-bottom: 0.8em; }
 .teaser p { margin-bottom: 1em; text-align: left; }
 section.unlisted h1, h1.unlisted { visibility: hidden; height: 0; margin: 0; }
+.pov {
+  text-align: center;
+  margin: -1.2em 0 2em 0;
+}
+.pov p {
+  text-align: center;
+  text-indent: 0;
+  font-size: 0.8em;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+.pov + p { text-indent: 0; }

@@ -23,6 +23,15 @@
     color: var(--ivory);
     font-family: "Cinzel", serif;
   }
+  body.debt {
+    background:
+      radial-gradient(ellipse 900px 820px at 50% 37%, rgba(214,178,100,0.18), rgba(214,178,100,0.05) 55%, transparent 75%),
+      radial-gradient(ellipse 1400px 1100px at 50% 105%, rgba(176,42,62,0.38), transparent 70%),
+      linear-gradient(180deg, #1f0a11 0%, #2c0e19 45%, #14060b 100%);
+  }
+  body.debt .face0 { stop-color: #3a1522; }
+  body.debt .face1 { stop-color: #260c15; }
+  body.debt .face2 { stop-color: #16070c; }
   .grain { position: absolute; inset: 0; opacity: 0.22; mix-blend-mode: overlay; }
   .vignette { position: absolute; inset: 0; background: radial-gradient(ellipse 1050px 1500px at 50% 48%, transparent 55%, rgba(0,0,0,0.65) 100%); }
 
@@ -67,13 +76,13 @@
   }
 </style>
 </head>
-<body>
+<body class="{{THEME}}">
   <svg class="grain" width="1600" height="2560">
     <filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
     <rect width="100%" height="100%" filter="url(#n)"/>
   </svg>
 
-  <div class="series">The Tithebound<span class="dot">◆</span>Book One</div>
+  <div class="series">The Tithebound<span class="dot">◆</span>{{BOOKNUM}}</div>
 
   <svg class="clock" viewBox="0 0 1000 1000" id="clock">
     <defs>
@@ -85,9 +94,9 @@
         <feGaussianBlur stdDeviation="14"/>
       </filter>
       <radialGradient id="face" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stop-color="#1a2133" stop-opacity="0.85"/>
-        <stop offset="70%" stop-color="#0f1422" stop-opacity="0.75"/>
-        <stop offset="100%" stop-color="#0a0d16" stop-opacity="0.2"/>
+        <stop class="face0" offset="0%" stop-color="#1a2133" stop-opacity="0.85"/>
+        <stop class="face1" offset="70%" stop-color="#0f1422" stop-opacity="0.75"/>
+        <stop class="face2" offset="100%" stop-color="#0a0d16" stop-opacity="0.2"/>
       </radialGradient>
       <linearGradient id="goldgrad" x1="0" y1="0" x2="0" y2="1">
         <stop offset="0%" stop-color="#f6e2a8"/>
@@ -98,17 +107,19 @@
   </svg>
 
   <div class="title">
-    <span class="big">A TITHE</span>
+    <span class="big">{{TITLE_TOP}}</span>
     <span class="of">of</span>
-    <span class="big">HOURS</span>
+    <span class="big">{{TITLE_BOTTOM}}</span>
   </div>
   <div class="rule"></div>
-  <div class="tagline">Every spell costs a life. Hers never runs out.</div>
+  <div class="tagline">{{TAGLINE}}</div>
   <div class="author">{{AUTHOR}}</div>
 
   <div class="vignette"></div>
 
 <script>
+  // hand: degrees from twelve; hi: index of the glowing numeral; walked: lit minutes between XI and XII (-1 = none)
+  const CFG = {{CLOCK}};
   const NS = "http://www.w3.org/2000/svg";
   const g = document.getElementById("dial");
   const C = 500;
@@ -147,12 +158,25 @@
     const t = el("text", {
       x: C + r * Math.sin(a), y: C - r * Math.cos(a),
       "text-anchor": "middle", "dominant-baseline": "central",
-      "font-family": "Cinzel", "font-size": i === 11 ? 62 : 52, "font-weight": 600,
-      fill: i === 11 ? "#f6e2a8" : "#d6b264", opacity: i === 11 ? 1 : 0.88,
-      filter: i === 11 ? "url(#glow)" : "",
+      "font-family": "Cinzel", "font-size": i === CFG.hi ? 62 : 52, "font-weight": 600,
+      fill: i === CFG.hi ? "#f6e2a8" : "#d6b264", opacity: i === CFG.hi ? 1 : 0.88,
+      filter: i === CFG.hi ? "url(#glow)" : "",
     });
     t.textContent = n;
   });
+
+  // The hand's walk from XI to XII: sixty minutes, the walked ones lit
+  if (CFG.walked >= 0) {
+    for (let k = 0; k < 60; k++) {
+      const a = (330 + (k + 0.5) * 0.5) * Math.PI / 180;
+      const lit = k < CFG.walked;
+      el("circle", {
+        cx: C + 440 * Math.sin(a), cy: C - 440 * Math.cos(a), r: lit ? 2.6 : 2,
+        fill: lit ? "#f6e2a8" : "#d6b264", opacity: lit ? 1 : 0.4,
+        filter: lit ? "url(#glow)" : "",
+      });
+    }
+  }
 
   // Silver thread: drawn from below-left, tied at the hub
   const threadPath = "M -120 1180 C 120 1010, 210 860, 300 760 S 430 560, 500 500";
@@ -162,8 +186,8 @@
   const cutPath = "M 500 500 C 560 450, 640 430, 720 400 S 860 330, 905 260";
   el("path", { d: cutPath, fill: "none", stroke: "#eef3fa", "stroke-width": 2.2, opacity: 0.55, "stroke-dasharray": "220 18 40 14 18 12 6 30" });
 
-  // The single hand, pointing at XI (rotated -30 degrees from twelve)
-  const hand = el("g", { transform: `rotate(-30 ${C} ${C})`, filter: "url(#glow)" });
+  // The single hand (Book One: at XI, rotated -30 degrees from twelve)
+  const hand = el("g", { transform: `rotate(${CFG.hand} ${C} ${C})`, filter: "url(#glow)" });
   el("path", {
     d: `M ${C} ${C + 70} L ${C + 9} ${C} L ${C + 4} ${C - 230} L ${C + 20} ${C - 262} L ${C} ${C - 336} L ${C - 20} ${C - 262} L ${C - 4} ${C - 230} L ${C - 9} ${C} Z`,
     fill: gold, stroke: "#7d5d26", "stroke-width": 1.2,

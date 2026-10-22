@@ -8,6 +8,8 @@ Writes <book>/dist/cover.jpg and <book>/dist/<book>.epub.
 The cover is rendered from tools/cover.html with headless Chromium (Playwright).
 """
 import argparse
+import html as htmllib
+import json
 import os
 import re
 import shutil
@@ -37,14 +39,45 @@ BOOKS = {
             "are buying it by the year. Tamsin Fenn's count has read seventy-one years "
             "since she was nine. It never goes down."
         ),
+        "cover": {
+            "theme": "tithe",
+            "booknum": "Book One",
+            "title_top": "A TITHE",
+            "title_bottom": "HOURS",
+            "tagline": "Every spell costs a life. Hers never runs out.",
+            "clock": {"hand": -30, "hi": 11, "walked": -1},
+        },
+    },
+    "book-2-a-debt-of-years": {
+        "title": "A Debt of Years",
+        "series": "The Tithebound",
+        "position": 2,
+        "description": (
+            "Tamsin Fenn's mother is alive, chained beneath the clock that has stolen "
+            "the city's years for three centuries. To free her, Tam must outlast the "
+            "woman who put her there, and settle a debt that is about to come due."
+        ),
+        "cover": {
+            "theme": "debt",
+            "booknum": "Book Two",
+            "title_top": "A DEBT",
+            "title_bottom": "YEARS",
+            "tagline": "Midnight is coming. Every year goes home.",
+            # 11:06 on the Horologe: six of the sixty minutes walked
+            "clock": {"hand": -27, "hi": 0, "walked": 6},
+        },
     },
 }
 
 
-def render_cover(author, fonts_dir, out_jpg):
+def render_cover(author, fonts_dir, cover, out_jpg):
     html = (TOOLS / "cover.html").read_text()
     html = html.replace("{{FONTDIR}}", Path(fonts_dir).resolve().as_uri())
-    html = html.replace("{{AUTHOR}}", author.upper())
+    html = html.replace("{{AUTHOR}}", htmllib.escape(author.upper()))
+    html = html.replace("{{THEME}}", cover["theme"])
+    html = html.replace("{{CLOCK}}", json.dumps(cover["clock"]))
+    for key in ("booknum", "title_top", "title_bottom", "tagline"):
+        html = html.replace("{{%s}}" % key.upper(), htmllib.escape(cover[key]))
     with tempfile.TemporaryDirectory() as tmp:
         page = Path(tmp) / "cover.html"
         page.write_text(html)
@@ -70,12 +103,12 @@ def render_cover(author, fonts_dir, out_jpg):
 
 
 def chapter_heading(lines):
-    """Merge '# Chapter One' + '## Title' into one H1 so the contents list shows both."""
+    """Merge '# Chapter One' (or Prologue/Epilogue) + '## Title' into one H1 so the contents list shows both."""
     out = []
     i = 0
     while i < len(lines):
         line = lines[i]
-        m = re.match(r"^# (Chapter (\w+(?:-\w+)?)|Epilogue)\s*$", line)
+        m = re.match(r"^# (Chapter (\w+(?:-\w+)?)|Prologue|Epilogue)\s*$", line)
         if m:
             j = i + 1
             while j < len(lines) and not lines[j].strip():
@@ -100,7 +133,9 @@ def build_epub(book_dir, meta, author, cover_jpg, out_epub):
         for n, src in enumerate(sources):
             text = src.read_text().replace("{{AUTHOR}}", author)
             lines = chapter_heading(text.splitlines())
-            lines = ['<p class="scenebreak">* * *</p>' if l.strip() == "---" else l for l in lines]
+            # A raw HTML block, so pandoc doesn't read "* * *" as a nested bullet list.
+            scenebreak = ["```{=html}", '<p class="scenebreak">* * *</p>', "```"]
+            lines = [out for l in lines for out in (scenebreak if l.strip() == "---" else [l])]
             dst = tmp / f"{n:03d}.md"
             dst.write_text("\n".join(lines) + "\n")
             staged.append(str(dst))
@@ -144,7 +179,7 @@ def main():
     cover = dist / "cover.jpg"
     epub = dist / f"{args.book}.epub"
 
-    render_cover(args.author, args.fonts, cover)
+    render_cover(args.author, args.fonts, meta["cover"], cover)
     build_epub(book_dir, meta, args.author, cover, epub)
     print(f"cover: {cover} ({cover.stat().st_size // 1024} KB)")
     print(f"epub:  {epub} ({epub.stat().st_size // 1024} KB)")

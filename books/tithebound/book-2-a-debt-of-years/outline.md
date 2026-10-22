@@ -175,4 +175,4 @@ Somewhere under the Gilt, in the Founders' tunnels, the Keeper watches her own c
 | Bry | 18y 2m | (her stolen 56 years will come home from Aurelia at midnight; Tam's 20 go back) |
 | Rook | unknown (lives on Meridian-paid years) | shrinking |
 | Lotte Varga | — | dies cutting the Stay |
-| The hand | 11:01 | 11:02 (Ch. 7), 11:03 (Ch. 17), lurches to 11:04 at the cut (Ch. 27), then a minute each day at noon; 11:06 and 54 days to midnight in Ch. 30 |
+| The hand | 11:01 | 11:02 (Ch. 7), 11:03 (Ch. 17), lurches to 11:04 at the cut (Ch. 27), then a minute each dawn, with every bell in the city ringing; 11:06 and 54 days to midnight in Ch. 30 |
