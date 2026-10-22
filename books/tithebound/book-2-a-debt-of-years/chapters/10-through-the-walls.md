@@ -36,7 +36,7 @@ There was somewhere now.
 
 ---
 
-He knew which room. He'd known since Hollis came down the ladder after the salon and told him: *the Violet Rooms, in the west wing, the old ones, at the end*. They'd been his great-great-grandfather's sister's, a hundred years ago; she'd died in them. His father had shown him the panel. *If you ever need to go somewhere nobody's looking, Sev, nobody ever looks in the Violet Rooms. They're haunted. Ask anyone.*
+He knew which room. He'd known since Hollis came down the ladder after the salon and told him: *the Violet Rooms, in the west wing, the old ones, at the end*. They'd belonged to some Thane great-aunt, a very long time ago; she'd died in them. His father had shown him the panel. *If you ever need to go somewhere nobody's looking, Sev, nobody ever looks in the Violet Rooms. They're haunted. Ask anyone.*
 
 He stopped behind the wall. The panel was in front of him, a narrow section of wood with a brass latch on this side, black with age. Through it he could feel the room. Warm. A fire. And empty.
 
