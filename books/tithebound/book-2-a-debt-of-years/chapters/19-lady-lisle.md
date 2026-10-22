@@ -154,7 +154,7 @@ I looked at her fox's face, and I thought: *you're lying too*. But I didn't know
 
 "Her blood on the knot," I said slowly. "Her palm on my mother's heart."
 
-"In the slack of that heart." Lady Lisle nodded. "My mother saw it once, two hundred years ago, when the Seven still witnessed it. She told me every detail. The Keeper opens her palm with the knife. She lays it on the well's breast, over the heart. And in the slack between two beats, she ties the knot." Her voice dropped further. "And in that moment, child, for that one blink, the Keeper's heart and the well's are the same heart. Joined. Through the blood. She's open. She can't draw. She can't cast. She can't do anything at all except tie." She smiled. "And whoever is holding the Keeper's knife in that moment holds the Stay."
+"In the slack of that heart." Lady Lisle nodded. "My mother saw it once, two hundred years ago, when the Seven still witnessed it. She told me every detail. The Keeper opens her palm with the knife. She lays it on the well's breast, over the heart. And in the slack between two beats, she ties the knot." Her voice dropped further. "And for that one blink, child, the Keeper's heart and the well's are the same heart. Joined. Through the blood. She's open. She can't draw. She can't cast. She can't do anything at all except tie." She smiled. "And whoever is holding the Keeper's knife in that blink holds the Stay."
 
 The river slid past under the two rails. On the white barge, under the awning, Lady Aurelia was patting the Crane steward's hand.
 

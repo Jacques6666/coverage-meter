@@ -100,7 +100,7 @@ She was sitting on her basket by the last vat with the mending in her lap. He'd 
 
 Eight lines. Two notches.
 
-She'd let out a breath through her nose, very slowly, as though she'd been holding it since the river wall. Then she'd let go of his arm and picked her needle back up and not said anything at all for a long while.
+She'd breathed out through her nose, very slowly, as though she'd been holding it since the river wall. Then she'd let go of his arm and picked her needle back up and not said anything at all for a long while.
 
 "I'm not making her do anything," he said.
 
@@ -162,7 +162,7 @@ Then, slowly, awkwardly, he put one hand on Orrin's shoulder.
 
 Severin pushed up his sleeve.
 
-Orrin looked at it. Eight lines. He let out a breath.
+Orrin looked at it. Eight lines. He whistled, very low.
 
 "Better than I'd heard," he said. "In Calder Bay they had you at two."
 
